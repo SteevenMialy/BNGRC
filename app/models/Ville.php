@@ -6,32 +6,32 @@ use PDO;
 
 class Ville
 {
-    public $id_ville;
-    public ?Region $region;      // = id_region
-    public $nom_ville;
+    public $id;
+    public ?Region $region;      // = idRegion
+    public $nomVille;
 
-    public function __construct($id_ville = null, ?Region $region = null, $nom_ville = null)
+    public function __construct($id = null, ?Region $region = null, $nomVille = null)
     {
-        $this->id_ville = $id_ville;
+        $this->id = $id;
         $this->region = $region;
-        $this->nom_ville = $nom_ville;
+        $this->nomVille = $nomVille;
     }
 
     public function insert($db): bool
     {
-        $sql = "INSERT INTO gd_villes (id_region, nom_ville)
-                VALUES (:region, :nom_ville)";
+        $sql = "INSERT INTO gd_villes (idRegion, nomVille)
+                VALUES (:region, :nomVille)";
         
         $stmt = $db->prepare($sql);
         return $stmt->execute([
             ':region' => $this->region->getIdregion(),
-            ':nom_ville' => $this->nom_ville
+            ':nomVille' => $this->nomVille
         ]);
     }
 
     public static function getAll($db): array
     {
-        $sql = "SELECT * FROM gd_villes ORDER BY id_ville DESC";
+        $sql = "SELECT * FROM gd_villes ORDER BY id DESC";
         $stmt = $db->query($sql);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -39,7 +39,7 @@ class Ville
 
     public static function getById($db, $id): ?Ville
     {
-        $sql = "SELECT * FROM gd_villes WHERE id_ville = :id";
+        $sql = "SELECT * FROM gd_villes WHERE id = :id";
         $stmt = $db->prepare($sql);
         $stmt->execute([':id' => $id]);
 
@@ -47,9 +47,9 @@ class Ville
 
         if ($row) {
             return new Ville(
-                $row['id_ville'],
-                Region::getById($db, $row['id_region']),
-                $row['nom_ville']
+                $row['id'],
+                Region::getById($db, $row['idRegion']),
+                $row['nomVille']
             );
         }
 
@@ -59,22 +59,22 @@ class Ville
     public function update($db): bool
     {
         $sql = "UPDATE gd_villes
-                SET id_region = :region,
-                    nom_ville = :nom_ville
-                WHERE id_ville = :id_ville";
+                SET idRegion = :region,
+                    nomVille = :nomVille
+                WHERE id = :id";
 
         $stmt = $db->prepare($sql);
 
         return $stmt->execute([
             ':region' => $this->region->getIdregion(),
-            ':nom_ville' => $this->nom_ville,
-            ':id_ville' => $this->id_ville
+            ':nomVille' => $this->nomVille,
+            ':id' => $this->id
         ]);
     }
 
     public static function delete($db, $id): bool
     {
-        $sql = "DELETE FROM gd_villes WHERE id_ville = :id";
+        $sql = "DELETE FROM gd_villes WHERE id = :id";
         $stmt = $db->prepare($sql);
 
         return $stmt->execute([':id' => $id]);

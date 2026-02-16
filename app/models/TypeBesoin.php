@@ -6,32 +6,28 @@ use PDO;
 
 class TypeBesoin
 {
-   public $id_types;
-   public $nom_types;
-   public $libele;
-    public function __construct($id_types = null, $nom_types = null, $libele = null)
+   public $id;
+   public $nom;
+    public function __construct($id = null, $nom = null)
     {
-        $this->id_types = $id_types;
-        $this->nom_types = $nom_types;
-        $this->libele = $libele;
+        $this->id = $id;
+        $this->nom = $nom;
     }
 
     public function insert($db): bool
     {
-        $sql = "INSERT INTO gd_types_besoin (id_types, nom_types, libele)
-                VALUES (:id_types, :nom_types, :libele)";
+        $sql = "INSERT INTO gd_typesDons (nom)
+                VALUES (:nom)";
         
         $stmt = $db->prepare($sql);
         return $stmt->execute([
-            ':id_types' => $this->id_types,
-            ':nom_types' => $this->nom_types,
-            ':libele' => $this->libele
+            ':nom' => $this->nom
         ]);
     }
 
     public static function getAll($db): array
     {
-        $sql = "SELECT * FROM gd_types_besoin ORDER BY id_types DESC";
+        $sql = "SELECT * FROM gd_typesDons ORDER BY id DESC";
         $stmt = $db->query($sql);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -39,7 +35,7 @@ class TypeBesoin
 
     public static function getById($db, $id): ?TypeBesoin
     {
-        $sql = "SELECT * FROM gd_types_besoin WHERE id_types = :id";
+        $sql = "SELECT * FROM gd_typesDons WHERE id = :id";
         $stmt = $db->prepare($sql);
         $stmt->execute([':id' => $id]);
 
@@ -47,9 +43,8 @@ class TypeBesoin
 
         if ($row) {
             return new TypeBesoin(
-                $row['id_types'],
-                $row['nom_types'],
-                $row['libele']
+                $row['id'],
+                $row['nom']
             );
         }
 
@@ -58,24 +53,21 @@ class TypeBesoin
 
     public function update($db): bool
     {
-        $sql = "UPDATE gd_types_besoin
-                SET id_types = :id_types,
-                    nom_types = :nom_types,
-                    libele = :libele
-                WHERE id_types = :id_types";
+        $sql = "UPDATE gd_typesDons
+                SET nom = :nom
+                WHERE id = :id";
 
         $stmt = $db->prepare($sql);
 
         return $stmt->execute([
-            ':id_types' => $this->id_types,
-            ':nom_types' => $this->nom_types,
-            ':libele' => $this->libele
+            ':nom' => $this->nom,
+            ':id' => $this->id
         ]);
     }
 
     public static function delete($db, $id): bool
     {
-        $sql = "DELETE FROM gd_types_besoin WHERE id_types = :id";
+        $sql = "DELETE FROM gd_typesDons WHERE id = :id";
         $stmt = $db->prepare($sql);
 
         return $stmt->execute([':id' => $id]);

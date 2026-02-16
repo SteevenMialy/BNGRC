@@ -43,13 +43,13 @@ class BesoinController
                 continue;
             }
 
-            $idTypes = $stock->dons->types_besoin?->id_types;
+            $idTypes = $stock->dons->types_besoin?->id;
 
             if (!$idTypes) {
                 continue;
             }
 
-            $quantiteRestante = $stock->quantite;
+            $quantiteRestante = $stock->qte;
 
             // Besoins non satisfaits du même type, triés par date la plus ancienne
             $besoins = Besoin::getNonSatisfaitsByType($db, $idTypes);
@@ -59,16 +59,16 @@ class BesoinController
                     break;
                 }
 
-                if ($quantiteRestante >= $besoin->quantite_demandee) {
+                if ($quantiteRestante >= $besoin->qte) {
                     // Satisfaction totale du besoin
-                    $quantiteLivree = $besoin->quantite_demandee;
-                    $quantiteRestante -= $besoin->quantite_demandee;
-                    $besoin->quantite_demandee = 0;
+                    $quantiteLivree = $besoin->qte;
+                    $quantiteRestante -= $besoin->qte;
+                    $besoin->qte = 0;
                     $count ++;
                 } else {
                     // Satisfaction partielle du besoin
                     $quantiteLivree = $quantiteRestante;
-                    $besoin->quantite_demandee -= $quantiteRestante;
+                    $besoin->qte -= $quantiteRestante;
                     $quantiteRestante = 0;
                     $count ++;
                 }
@@ -84,7 +84,7 @@ class BesoinController
             }
 
             // Mise à jour du stock restant
-            $stock->quantite = $quantiteRestante;
+            $stock->qte = $quantiteRestante;
             $stock->update($db);
         }
 
