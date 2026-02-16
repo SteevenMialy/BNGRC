@@ -7,6 +7,5 @@ CREATE TABLE gd_achat (
     quantite DECIMAL(15,2) NOT NULL,
     date_achat TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (idVille) REFERENCES gd_villes(id),
-    FOREIGN KEY (idTypes) REFERENCES gd_typesDons(id),
     FOREIGN KEY (idDons) REFERENCES gd_dons(id)
 );

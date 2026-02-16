@@ -61,7 +61,7 @@
                 Achats
             </a>
 
-            <a href="<?= BASE_URL ?>/achat" class="sidebar__link">
+            <a href="<?= BASE_URL ?>/form/ajoutBesoin" class="sidebar__link">
                 <i class="fa-solid fa-clipboard-list"></i>
                 Enregistrer un besoin
             </a>

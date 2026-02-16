@@ -25,7 +25,11 @@ class VilleController
         return Ville::getById(Flight::db(), $id);
     }
 
-
+    public static function getAll()
+    {
+        $db = Flight::db();
+        return Ville::getAll($db);
+    }
 
 
 }
