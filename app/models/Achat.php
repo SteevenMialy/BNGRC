@@ -32,8 +32,8 @@ class Achat
 
         $stmt = $db->prepare($sql);
         return $stmt->execute([
-            ':idVille' => $this->ville?->id_ville,
-            ':idDons' => $this->dons?->id_dons,
+            ':idVille' => $this->ville?->id,
+            ':idDons' => $this->dons?->id,
             ':taux' => $this->taux,
             ':quantite' => $this->quantite,
             ':date_achat' => $this->date_achat
@@ -139,13 +139,14 @@ class Achat
                 VALUES (:idVille, :idDons, :taux, :quantite, :date_achat)";
 
         $stmt = $db->prepare($sql);
-        return $stmt->execute([
+        $stmt->execute([
             ':idVille' => $data['idVille'],
             ':idDons' => $data['idDons'],
             ':taux' => $data['taux'],
             ':quantite' => $data['quantite'],
             ':date_achat' => $data['date_achat'] ?? date('Y-m-d H:i:s')
         ]);
+        return $db->lastInsertId() > 0;
     }
 
     private static function getAchatRow($db, $id_achat): ?array
@@ -301,8 +302,8 @@ class Achat
 
         $stmt = $db->prepare($sql);
         return $stmt->execute([
-            ':idVille' => $this->ville?->id_ville,
-            ':idDons' => $this->dons?->id_dons,
+            ':idVille' => $this->ville?->id,
+            ':idDons' => $this->dons?->id,
             ':taux' => $this->taux,
             ':quantite' => $this->quantite,
             ':date_achat' => $this->date_achat,

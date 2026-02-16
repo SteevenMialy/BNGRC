@@ -6,22 +6,22 @@ use PDO;
 
 class Mouvement
 {
-    public $id_mvstock;
+    public $id;
     public ?Besoin $besoin;
     public ?Stock $stock;
     public $entree;
     public $sortie;
-    public $date_attribution;
+    public $daty;
     public $designation;
 
-    public function __construct($id_mvstock = null, ?Besoin $besoin = null, ?Stock $stock = null, $entree = null, $sortie = null, $date_attribution = null, $designation = null)
+    public function __construct($id = null, ?Besoin $besoin = null, ?Stock $stock = null, $entree = null, $sortie = null, $daty = null, $designation = null)
     {
-        $this->id_mvstock = $id_mvstock;
+        $this->id = $id;
         $this->besoin = $besoin;
         $this->stock = $stock;
         $this->entree = $entree;
         $this->sortie = $sortie;
-        $this->date_attribution = $date_attribution;
+        $this->daty = $daty;
         $this->designation = $designation;
     }
 
@@ -29,11 +29,11 @@ class Mouvement
     {
         $stock = [];
         foreach ($data as $key => $value) {
-            $sql ="UPDATE gd_stock SET quantite = quantite - :sortie WHERE id_stock = :id_stock";
+            $sql ="UPDATE gd_stock SET qte = qte - :sortie WHERE id = :id";
             $stmt2 = $db->prepare($sql);
             $stmt2->execute([
                 ':sortie' => $value['sortie'],
-                ':id_stock' => $value['id_stock']
+                ':id' => $value['id']
             ]);
             $stock[] = $stmt2->rowCount();
         }
@@ -45,48 +45,48 @@ class Mouvement
 
     public function insertentre($db, $data): bool
     {
-        $sql = "INSERT INTO gd_mvstock (id_besoin, id_stock, entree, sortie, date_attribution, designation)
-                VALUES (:id_besoin, :id_stock, :entree, :sortie, :date_attribution, :designation)";
+        $sql = "INSERT INTO gd_mvstock (idbesoin, idstock, entree, sortie, daty, designation)
+                VALUES (:idbesoin, :idstock, :entree, :sortie, :daty, :designation)";
 
         $stmt = $db->prepare($sql);
         return $stmt->execute([
-            ':id_besoin' => $data['id_besoin'],
-            ':id_stock' => $data['id_stock'],
+            ':idbesoin' => $data['id_besoin'] ?? $data['idbesoin'],
+            ':idstock' => $data['id_stock'] ?? $data['idstock'],
             ':entree' => $data['entree'],
             ':sortie' => 0,
-            ':date_attribution' => $data['date_attribution'],
+            ':daty' => $data['date_attribution'] ?? $data['daty'] ?? date('Y-m-d H:i:s'),
             ':designation' => $data['designation']
         ]);
     }
 
     public function insertsortie($db, $data): bool
     {
-        $sql = "INSERT INTO gd_mvstock (id_besoin, id_stock, entree, sortie, date_attribution, designation)
-                VALUES (:id_besoin, :id_stock, :entree, :sortie, :date_attribution, :designation)";
+        $sql = "INSERT INTO gd_mvstock (idbesoin, idstock, entree, sortie, daty, designation)
+                VALUES (:idbesoin, :idstock, :entree, :sortie, :daty, :designation)";
 
         $stmt = $db->prepare($sql);
         return $stmt->execute([
-            ':id_besoin' => $data['id_besoin'],
-            ':id_stock' => $data['id_stock'],
+            ':idbesoin' => $data['id_besoin'] ?? $data['idbesoin'],
+            ':idstock' => $data['id_stock'] ?? $data['idstock'],
             ':entree' => 0,
             ':sortie' => $data['sortie'],
-            ':date_attribution' => $data['date_attribution'],
+            ':daty' => $data['date_attribution'] ?? $data['daty'] ?? date('Y-m-d H:i:s'),
             ':designation' => $data['designation']
         ]);
     }
 
     public function insert($db): bool
     {
-        $sql = "INSERT INTO gd_mvstock (id_besoin, id_stock, entree, sortie, date_attribution, designation)
-                VALUES (:id_besoin, :id_stock, :entree, :sortie, :date_attribution, :designation)";
+        $sql = "INSERT INTO gd_mvstock (idbesoin, idstock, entree, sortie, daty, designation)
+                VALUES (:idbesoin, :idstock, :entree, :sortie, :daty, :designation)";
 
         $stmt = $db->prepare($sql);
         return $stmt->execute([
-            ':id_besoin' => $this->besoin?->id_besoin,
-            ':id_stock' => $this->stock?->id_stock,
+            ':idbesoin' => $this->besoin?->id,
+            ':idstock' => $this->stock?->id,
             ':entree' => $this->entree,
             ':sortie' => $this->sortie,
-            ':date_attribution' => $this->date_attribution,
+            ':daty' => $this->daty,
             ':designation' => $this->designation
         ]);
     }
@@ -94,26 +94,26 @@ class Mouvement
    
     public static function getAll($db): array
     {
-        $sql = "SELECT * FROM gd_mvstock ORDER BY date_attribution DESC";
+        $sql = "SELECT * FROM gd_mvstock ORDER BY daty DESC";
         $stmt = $db->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public static function getById($db, $id): ?Mouvement
     {
-        $sql = "SELECT * FROM gd_mvstock WHERE id_mvstock = :id";
+        $sql = "SELECT * FROM gd_mvstock WHERE id = :id";
         $stmt = $db->prepare($sql);
         $stmt->execute([':id' => $id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($row) {
             return new Mouvement(
-                $row['id_mvstock'],
-                Besoin::getById($db, $row['id_besoin']),
-                Stock::getById($db, $row['id_stock']),
+                $row['id'],
+                Besoin::getById($db, $row['idbesoin']),
+                Stock::getById($db, $row['idstock']),
                 $row['entree'],
                 $row['sortie'],
-                $row['date_attribution'],
+                $row['daty'],
                 $row['designation']
             );
         }
@@ -123,29 +123,29 @@ class Mouvement
     public function update($db): bool
     {
         $sql = "UPDATE gd_mvstock 
-                SET id_besoin = :id_besoin,
-                    id_stock = :id_stock,
+                SET idbesoin = :idbesoin,
+                    idstock = :idstock,
                     entree = :entree,
                     sortie = :sortie,
-                    date_attribution = :date_attribution,
+                    daty = :daty,
                     designation = :designation
-                WHERE id_mvstock = :id_mvstock";
+                WHERE id = :id";
 
         $stmt = $db->prepare($sql);
         return $stmt->execute([
-            ':id_besoin' => $this->besoin?->id_besoin,
-            ':id_stock' => $this->stock?->id_stock,
+            ':idbesoin' => $this->besoin?->id,
+            ':idstock' => $this->stock?->id,
             ':entree' => $this->entree,
             ':sortie' => $this->sortie,
-            ':date_attribution' => $this->date_attribution,
+            ':daty' => $this->daty,
             ':designation' => $this->designation,
-            ':id_mvstock' => $this->id_mvstock
+            ':id' => $this->id
         ]);
     }
 
     public static function delete($db, $id): bool
     {
-        $sql = "DELETE FROM gd_mvstock WHERE id_mvstock = :id";
+        $sql = "DELETE FROM gd_mvstock WHERE id = :id";
         $stmt = $db->prepare($sql);
         return $stmt->execute([':id' => $id]);
     }

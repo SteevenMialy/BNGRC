@@ -44,6 +44,14 @@ class Dons
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function getAllSansArgent($db): array
+    {
+        $sql = "SELECT * FROM gd_dons d WHERE d.idTypes != 3 ORDER BY daty ASC";
+        $stmt = $db->query($sql);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public static function getById($db, $id): ?Dons
     {
         $sql = "SELECT * FROM gd_dons WHERE id = :id";
@@ -60,7 +68,7 @@ class Dons
                 TypeBesoin::getById($db, $row['idTypes']),
                 $row['daty']
             );
-        }
+        }   
 
         return null;
     }
