@@ -51,10 +51,13 @@ class AchatController
         return Achat::delete($db, $id);
     }
 
-    public static function valider($id)
+    public static function valider()
     {
         $db = Flight::db();
         $achat = new Achat();
+          $request = Flight::request();
+        $data = $request->data->getData();
+       $id= $achat->insertData($db, $data);
         return $achat->valider($db, $id);
     }
 
