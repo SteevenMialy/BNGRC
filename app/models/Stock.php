@@ -80,4 +80,18 @@ class Stock
         $stmt = $db->prepare($sql);
         return $stmt->execute([':id' => $id]);
     }
+
+    public static function tristock($db): array
+    {
+        //trier par date de reception descendant
+        $sql = "SELECT * FROM gd_stock ORDER BY date_reception DESC";
+        $stmt = $db->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    
+
+
+
+
 }
