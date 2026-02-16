@@ -1,10 +1,9 @@
 <?php
 
 use app\controllers\BesoinController;
-
+use app\controllers\VilleController;
+use app\controllers\DonController;
 use app\middlewares\SecurityHeadersMiddleware;
-use app\models\Besoin;
-use app\models\Category;
 use flight\Engine;
 use flight\net\Router;
 
@@ -19,6 +18,14 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // This wraps all routes in the group with the SecurityHeadersMiddleware
 $router->group('', function (Router $router) use ($app) {
+	$router->get('/form/ajoutBesoin', function () use ($app) {
+		$app->render('insertBesoin', [
+			'villes' => VilleController::getAll(),
+			'dons' => DonController::getAll()
+		]);
+	});
+
+	Flight::route('/besoin/insert', [BesoinController::class, 'ajouterBesoin']);
 
 	$router->get('/listBesoin/satisfaits', function () use ($app) {
 		$app->render('listBesoin', [

@@ -4,17 +4,54 @@ namespace app\controllers;
 
 use app\models\Besoin;
 use app\models\Stock;
+use app\models\Ville;
+use app\models\Dons;
 use Flight;
 use flight\Engine;
 
 class BesoinController
 {
-	protected Engine $app;
-	
-	public function __construct($app)
-	{
-		$this->app = $app;
-	}
+    protected Engine $app;
+
+    public function __construct($app)
+    {
+        $this->app = $app;
+    }
+
+    public static function ajouterBesoin()
+    {
+        $db = Flight::db();
+        $req = Flight::request();
+        $data = $req->data;
+
+        $idVille = $data->idVille ?? null;
+        $idDon = $data->idDon ?? null;
+        $qte = $data->qte ?? null;
+        $daty = $data->daty ?? null;
+
+        $ville = $idVille ? Ville::getById($db, $idVille) : null;
+        $don = $idDon ? Dons::getById($db, $idDon) : null;
+
+        $besoin = new Besoin(
+            null,
+            $ville,
+            $don,
+            $qte,
+            $daty
+        );
+
+        if ($besoin->insert($db)) {
+            Flight::json([
+                'success' => true,
+                'redirection' => BASE_URL . '/listBesoin/nonSatisfaits'
+            ]);
+        } else {
+            Flight::json([
+                'success' => false,
+                'error' => 'Erreur lors de l\'ajout du besoin'
+            ]);
+        }
+    }
 
     public static function getBesoinsNonSatisfaits()
     {
@@ -81,13 +118,13 @@ class BesoinController
                     $quantiteLivree = $besoin->qte;
                     $quantiteRestante -= $besoin->qte;
                     $besoin->qte = 0;
-                    $count ++;
+                    $count++;
                 } else {
                     // Satisfaction partielle du besoin
                     $quantiteLivree = $quantiteRestante;
                     $besoin->qte -= $quantiteRestante;
                     $quantiteRestante = 0;
-                    $count ++;
+                    $count++;
                 }
 
                 // Mise à jour du besoin en base
@@ -110,5 +147,4 @@ class BesoinController
             'message' => 'Dons livrés et besoins mis à jour (' . $count . ' besoins satisfaits)'
         ]);
     }
-
 }
