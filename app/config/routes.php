@@ -23,9 +23,10 @@ if (session_status() === PHP_SESSION_NONE) {
 // This wraps all routes in the group with the SecurityHeadersMiddleware
 $router->group('', function (Router $router) use ($app) {
 
-	$router->get('/liste/satisfait', function () use ($app) {
+	$router->get('/listBesoin/satisfaits', function () use ($app) {
 		$app->render('listBesoin', [
-			'besoins' => BesoinController::getBesoinsSatisfaits()
+			'besoins' => BesoinController::getBesoinsSatisfaits(),
+			'counts' => BesoinController::allCounts()
 		]);
 	});
 	
@@ -33,13 +34,15 @@ $router->group('', function (Router $router) use ($app) {
 
 	$router->get('/', function () use ($app) {
 		$app->render('listBesoin', [
-			'besoins' => BesoinController::getBesoinsNonSatisfaits()
+			'besoins' => BesoinController::getAllBesoins(),
+			'counts' => BesoinController::allCounts()
 		]);
 	});
 
-	$router->get('/liste/nonsatisfait', function () use ($app) {
+	$router->get('/listBesoin/nonSatisfaits', function () use ($app) {
 		$app->render('listBesoin', [
-			'besoins' => BesoinController::getBesoinsNonSatisfaits()
+			'besoins' => BesoinController::getBesoinsNonSatisfaits(),
+			'counts' => BesoinController::allCounts()
 		]);
 	});
 
