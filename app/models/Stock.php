@@ -21,12 +21,12 @@ class Stock
 
     public function insert($db): bool
     {
-        $sql = "INSERT INTO gd_stock (id_dons, quantite, date_reception)
-                VALUES (:id_dons, :quantite, :date_reception)";
+        $sql = "INSERT INTO gd_stock (id_don, quantite, date_reception)
+                VALUES (:id_don, :quantite, :date_reception)";
 
         $stmt = $db->prepare($sql);
         return $stmt->execute([
-            ':id_dons' => $this->dons?->id_dons,
+            ':id_don' => $this->dons?->id_dons,
             ':quantite' => $this->quantite,
             ':date_reception' => $this->date_reception
         ]);
@@ -49,7 +49,7 @@ class Stock
         if ($row) {
             return new Stock(
                 $row['id_stock'],
-                Dons::getById($db, $row['id_dons']), // On hydrate l'objet Dons
+                Dons::getById($db, $row['id_don']), // On hydrate l'objet Dons
                 $row['quantite'],
                 $row['date_reception']
             );
@@ -60,14 +60,14 @@ class Stock
     public function update($db): bool
     {
         $sql = "UPDATE gd_stock 
-                SET id_dons = :id_dons,
+                SET id_don = :id_don,
                     quantite = :quantite,
                     date_reception = :date_reception
                 WHERE id_stock = :id_stock";
 
         $stmt = $db->prepare($sql);
         return $stmt->execute([
-            ':id_dons' => $this->dons?->id_dons,
+            ':id_don' => $this->dons?->id_dons,
             ':quantite' => $this->quantite,
             ':date_reception' => $this->date_reception,
             ':id_stock' => $this->id_stock
@@ -81,7 +81,7 @@ class Stock
         return $stmt->execute([':id' => $id]);
     }
 
-    public function dons_ayant_stock ($db) {
+    public static function dons_ayant_stock ($db) {
         $sql = "SELECT * FROM gd_dons d JOIN gd_stock s ON d.id_don=s.id_don WHERE s.quantite>0 ORDER BY s.date_reception ASC";
         $stmt = $db->prepare($sql);
         $stmt->execute();
@@ -91,7 +91,7 @@ class Stock
         foreach ($rows as $row) {
             $stocks[] = new Stock(
                 $row['id_stock'],
-                Dons::getById($db, $row['id_dons']), // On hydrate l'objet Dons
+                Dons::getById($db, $row['id_don']), // On hydrate l'objet Dons
                 $row['quantite'],
                 $row['date_reception']
             );

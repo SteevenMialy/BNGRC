@@ -23,13 +23,12 @@ class Dons
 
     public function insert($db): bool
     {
-        $sql = "INSERT INTO gd_dons (id_ville, id_types, quantite, date_reception)
-            VALUES (:ville, :types_besoin, :quantite, :date_reception)";
+        $sql = "INSERT INTO gd_dons (id_types, quantite, date_reception)
+            VALUES (:types_besoin, :quantite, :date_reception)";
 
         $stmt = $db->prepare($sql);
 
         return $stmt->execute([
-            ':ville' => $this->ville?->id_ville,
             ':types_besoin' => $this->types_besoin?->id_types,
             ':quantite' => $this->quantite,
             ':date_reception' => $this->date_reception
@@ -46,7 +45,7 @@ class Dons
 
     public static function getById($db, $id): ?Dons
     {
-        $sql = "SELECT * FROM gd_dons WHERE id_dons = :id";
+        $sql = "SELECT * FROM gd_dons WHERE id_don = :id";
         $stmt = $db->prepare($sql);
         $stmt->execute([':id' => $id]);
 
@@ -54,8 +53,8 @@ class Dons
 
         if ($row) {
             return new Dons(
-                $row['id_dons'],
-                Ville::getById($db, $row['id_ville']),
+                $row['id_don'],
+                null,
                 TypeBesoin::getById($db, $row['id_types']),
                 $row['quantite'],
                 $row['date_reception']
@@ -68,26 +67,24 @@ class Dons
     public function update($db): bool
     {
         $sql = "UPDATE gd_dons 
-            SET id_ville = :ville,
-                id_types = :types_besoin,
+            SET id_types = :types_besoin,
                 quantite = :quantite,
                 date_reception = :date_reception
-            WHERE id_dons = :id_dons";
+            WHERE id_don = :id_don";
 
         $stmt = $db->prepare($sql);
 
         return $stmt->execute([
-            ':ville' => $this->ville?->id_ville,
             ':types_besoin' => $this->types_besoin?->id_types,
             ':quantite' => $this->quantite,
             ':date_reception' => $this->date_reception,
-            ':id_dons' => $this->id_dons
+            ':id_don' => $this->id_dons
         ]);
     }
 
     public static function delete($db, $id): bool
     {
-        $sql = "DELETE FROM gd_dons WHERE id_dons = :id";
+        $sql = "DELETE FROM gd_dons WHERE id_don = :id";
         $stmt = $db->prepare($sql);
 
         return $stmt->execute([':id' => $id]);

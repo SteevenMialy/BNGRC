@@ -21,6 +21,27 @@ class Besoin
         $this->date_demande = $date_demande;
     }
 
+    public static function getNonSatisfaitsByType($db, int $idTypes): array
+    {
+        $sql = "SELECT * FROM gd_besoins_ville
+                WHERE quantite_demandee > 0 AND id_types = :idTypes
+                ORDER BY date_demande ASC";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([':idTypes' => $idTypes]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $besoins = [];
+        foreach ($rows as $row) {
+            $besoins[] = new Besoin(
+                $row['id_besoin'],
+                Ville::getById($db, $row['id_ville']),
+                TypeBesoin::getById($db, $row['id_types']),
+                $row['quantite_demandee'],
+                $row['date_demande']
+            );
+        }
+        return $besoins;
+    }
+
     public function insert($db): bool
     {
         $sql = "INSERT INTO gd_besoins_ville (id_ville, id_types, quantite_demandee, date_demande)

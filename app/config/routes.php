@@ -25,6 +25,8 @@ $router->group('', function (Router $router) use ($app) {
 			'besoins' => BesoinController::getBesoinsSatisfaits()
 		]);
 	});
+	
+	Flight::route('/besoin/delivrer', [BesoinController::class, 'livrerDons']);
 
 	$router->get('/', function () use ($app) {
 		$app->render('listBesoin', [
