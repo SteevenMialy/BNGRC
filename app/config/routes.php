@@ -32,7 +32,7 @@ $router->group('', function (Router $router) use ($app) {
 		]);
 	});
 
-	$router->get('/liste/non-satisfait', function () use ($app) {
+	$router->get('/liste/nonsatisfait', function () use ($app) {
 		$app->render('listBesoin', [
 			'besoins' => BesoinController::getBesoinsNonSatisfaits()
 		]);
