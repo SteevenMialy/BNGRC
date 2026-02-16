@@ -3,7 +3,7 @@ USE gestion_dons;
 
 CREATE TABLE gd_regions(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nomVARCHAR(100) NOT NULL
+    nom VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE gd_villes (

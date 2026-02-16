@@ -6,38 +6,39 @@ use PDO;
 
 class Dons
 {
-    public $id_dons;
-    public ?Ville $ville; //id_ville
-    public ?TypeBesoin $types_besoin; //id_types
-    public $quantite;
-    public $date_reception;
+    public $id;
+    public $libelle;
+    public $pu;
+    public ?TypeBesoin $types_besoin; //idTypes
+    public $daty;
 
-    public function __construct($id_dons = null, ?Ville $ville = null, ?TypeBesoin $types_besoin = null, $quantite = null, $date_reception = null)
+    public function __construct($id = null, $libelle = null, $pu = null, ?TypeBesoin $types_besoin = null, $daty = null)
     {
-        $this->id_dons = $id_dons;
-        $this->ville = $ville;
+        $this->id = $id;
+        $this->libelle = $libelle;
+        $this->pu = $pu;
         $this->types_besoin = $types_besoin;
-        $this->quantite = $quantite;
-        $this->date_reception = $date_reception;
+        $this->daty = $daty;
     }
 
     public function insert($db): bool
     {
-        $sql = "INSERT INTO gd_dons (id_types, quantite, date_reception)
-            VALUES (:types_besoin, :quantite, :date_reception)";
+        $sql = "INSERT INTO gd_dons (libelle, pu, idTypes, daty)
+            VALUES (:libelle, :pu, :idTypes, :daty)";
 
         $stmt = $db->prepare($sql);
 
         return $stmt->execute([
-            ':types_besoin' => $this->types_besoin?->id_types,
-            ':quantite' => $this->quantite,
-            ':date_reception' => $this->date_reception
+            ':libelle' => $this->libelle,
+            ':pu' => $this->pu,
+            ':idTypes' => $this->types_besoin?->id,
+            ':daty' => $this->daty
         ]);
     }
 
     public static function getAll($db): array
     {
-        $sql = "SELECT * FROM gd_dons ORDER BY date_reception ASC";
+        $sql = "SELECT * FROM gd_dons ORDER BY daty ASC";
         $stmt = $db->query($sql);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -45,7 +46,7 @@ class Dons
 
     public static function getById($db, $id): ?Dons
     {
-        $sql = "SELECT * FROM gd_dons WHERE id_don = :id";
+        $sql = "SELECT * FROM gd_dons WHERE id = :id";
         $stmt = $db->prepare($sql);
         $stmt->execute([':id' => $id]);
 
@@ -53,11 +54,11 @@ class Dons
 
         if ($row) {
             return new Dons(
-                $row['id_don'],
-                null,
-                TypeBesoin::getById($db, $row['id_types']),
-                $row['quantite'],
-                $row['date_reception']
+                $row['id'],
+                $row['libelle'],
+                $row['pu'],
+                TypeBesoin::getById($db, $row['idTypes']),
+                $row['daty']
             );
         }
 
@@ -67,24 +68,26 @@ class Dons
     public function update($db): bool
     {
         $sql = "UPDATE gd_dons 
-            SET id_types = :types_besoin,
-                quantite = :quantite,
-                date_reception = :date_reception
-            WHERE id_don = :id_don";
+            SET libelle = :libelle,
+                pu = :pu,
+                idTypes = :idTypes,
+                daty = :daty
+            WHERE id = :id";
 
         $stmt = $db->prepare($sql);
 
         return $stmt->execute([
-            ':types_besoin' => $this->types_besoin?->id_types,
-            ':quantite' => $this->quantite,
-            ':date_reception' => $this->date_reception,
-            ':id_don' => $this->id_dons
+            ':libelle' => $this->libelle,
+            ':pu' => $this->pu,
+            ':idTypes' => $this->types_besoin?->id,
+            ':daty' => $this->daty,
+            ':id' => $this->id
         ]);
     }
 
     public static function delete($db, $id): bool
     {
-        $sql = "DELETE FROM gd_dons WHERE id_don = :id";
+        $sql = "DELETE FROM gd_dons WHERE id = :id";
         $stmt = $db->prepare($sql);
 
         return $stmt->execute([':id' => $id]);

@@ -6,52 +6,52 @@ use PDO;
 
 class Stock
 {
-    public $id_stock;
+    public $id;
     public ?Dons $dons; // Objet Dons
-    public $quantite;
-    public $date_reception;
+    public $qte;
+    public $daty;
 
-    public function __construct($id_stock = null, ?Dons $dons = null, $quantite = null, $date_reception = null)
+    public function __construct($id = null, ?Dons $dons = null, $qte = null, $daty = null)
     {
-        $this->id_stock = $id_stock;
+        $this->id = $id;
         $this->dons = $dons;
-        $this->quantite = $quantite;
-        $this->date_reception = $date_reception;
+        $this->qte = $qte;
+        $this->daty = $daty;
     }
 
     public function insert($db): bool
     {
-        $sql = "INSERT INTO gd_stock (id_don, quantite, date_reception)
-                VALUES (:id_don, :quantite, :date_reception)";
+        $sql = "INSERT INTO gd_stock (idDon, qte, daty)
+                VALUES (:idDon, :qte, :daty)";
 
         $stmt = $db->prepare($sql);
         return $stmt->execute([
-            ':id_don' => $this->dons?->id_dons,
-            ':quantite' => $this->quantite,
-            ':date_reception' => $this->date_reception
+            ':idDon' => $this->dons?->id,
+            ':qte' => $this->qte,
+            ':daty' => $this->daty
         ]);
     }
 
     public static function getAll($db): array
     {
-        $sql = "SELECT * FROM gd_stock ORDER BY date_reception DESC";
+        $sql = "SELECT * FROM gd_stock ORDER BY daty DESC";
         $stmt = $db->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public static function getById($db, $id): ?Stock
     {
-        $sql = "SELECT * FROM gd_stock WHERE id_stock = :id";
+        $sql = "SELECT * FROM gd_stock WHERE id = :id";
         $stmt = $db->prepare($sql);
         $stmt->execute([':id' => $id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($row) {
             return new Stock(
-                $row['id_stock'],
-                Dons::getById($db, $row['id_don']), // On hydrate l'objet Dons
-                $row['quantite'],
-                $row['date_reception']
+                $row['id'],
+                Dons::getById($db, $row['idDon']),
+                $row['qte'],
+                $row['daty']
             );
         }
         return null;
@@ -60,29 +60,29 @@ class Stock
     public function update($db): bool
     {
         $sql = "UPDATE gd_stock 
-                SET id_don = :id_don,
-                    quantite = :quantite,
-                    date_reception = :date_reception
-                WHERE id_stock = :id_stock";
+                SET idDon = :idDon,
+                    qte = :qte,
+                    daty = :daty
+                WHERE id = :id";
 
         $stmt = $db->prepare($sql);
         return $stmt->execute([
-            ':id_don' => $this->dons?->id_dons,
-            ':quantite' => $this->quantite,
-            ':date_reception' => $this->date_reception,
-            ':id_stock' => $this->id_stock
+            ':idDon' => $this->dons?->id,
+            ':qte' => $this->qte,
+            ':daty' => $this->daty,
+            ':id' => $this->id
         ]);
     }
 
     public static function delete($db, $id): bool
     {
-        $sql = "DELETE FROM gd_stock WHERE id_stock = :id";
+        $sql = "DELETE FROM gd_stock WHERE id = :id";
         $stmt = $db->prepare($sql);
         return $stmt->execute([':id' => $id]);
     }
 
     public static function dons_ayant_stock ($db) {
-        $sql = "SELECT * FROM gd_dons d JOIN gd_stock s ON d.id_don=s.id_don WHERE s.quantite>0 ORDER BY s.date_reception ASC";
+        $sql = "SELECT * FROM gd_dons d JOIN gd_stock s ON d.id=s.idDon WHERE s.qte>0 ORDER BY s.daty ASC";
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -90,10 +90,10 @@ class Stock
         $stocks = [];
         foreach ($rows as $row) {
             $stocks[] = new Stock(
-                $row['id_stock'],
-                Dons::getById($db, $row['id_don']), // On hydrate l'objet Dons
-                $row['quantite'],
-                $row['date_reception']
+                $row['id'],
+                Dons::getById($db, $row['idDon']),
+                $row['qte'],
+                $row['daty']
             );
         }
         return $stocks;
