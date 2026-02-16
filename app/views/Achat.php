@@ -101,7 +101,7 @@
 
                     </div>
 
-                    <div class="d-flex gap-3 mt-4">
+                    <div class="d-flex gap-3 mt-2">
                         <button type="submit" class="btn-primary">
                             <i class="fa-solid fa-calculator"></i> Simuler
                         </button>

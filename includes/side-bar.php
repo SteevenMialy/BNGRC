@@ -7,7 +7,7 @@
     <title>BNGRC</title>
 
     <!-- Bootstrap 5.3 -->
-    <link href="<?= BASE_URL ?>/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<?= BASE_URL ?>/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/lib/fontawesome/css/all.min.css">
     <!-- Google Fonts -->

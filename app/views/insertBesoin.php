@@ -81,7 +81,7 @@
                         </select>
                     </div>
 
-                    <br>
+
                     <div class="col-md-6 mb-4">
                         <label for="idDon" class="form-label fw-semibold">Type de Don <span class="text-danger">*</span></label>
                         <select class="form-select" id="idDon" name="idDon" required>
@@ -92,13 +92,13 @@
                         </select>
                     </div>
 
-                    <br>
+
                     <div class="col-md-6 mb-4">
                         <label for="qte" class="form-label fw-semibold">Quantité demandée <span class="text-danger">*</span></label>
                         <input type="number" step="0.01" class="form-control" id="qte" name="qte" placeholder="Ex: 100" required>
                     </div>
 
-                    <br>
+
                     <div class="col-md-6 mb-4">
                         <label for="daty" class="form-label fw-semibold">Date de demande <span class="text-danger">*</span></label>
                         <input type="datetime-local" class="form-control" id="daty" name="daty" required>
@@ -123,25 +123,25 @@
 <script src="<?= BASE_URL ?>/assets/js/jquery-3.7.1.min.js"></script>
 <script src="<?= BASE_URL ?>/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script>
-var form = document.getElementById('besoinForm');
-form.addEventListener('submit', function(e) {
-    e.preventDefault();
+    var form = document.getElementById('besoinForm');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
 
-    var formData = new FormData(form);
-    fetch(form.action, {
-        method: 'POST',
-        body: formData
-    }) .then(response => response.json())
-    .then(data => {
-        if(data.success) {
-            window.location.href = data.redirection;
-        } else {
-            alert(data.error || 'Une erreur est survenue');
-        }
-    }) .catch(error => {
-        console.error('Error:', error);
+        var formData = new FormData(form);
+        fetch(form.action, {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.redirection;
+                } else {
+                    alert(data.error || 'Une erreur est survenue');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
     });
-});
 </script>
 </body>
 
