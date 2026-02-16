@@ -61,6 +61,10 @@
                 Achats
             </a>
 
+            <a href="<?= BASE_URL ?>/stock/form" class="sidebar__link">
+                <i class="fa-solid fa-box-open"></i> Insertion Stock
+            </a>
+
             <a href="<?= BASE_URL ?>/form/ajoutBesoin" class="sidebar__link">
                 <i class="fa-solid fa-clipboard-list"></i>
                 Enregistrer un besoin
@@ -75,4 +79,5 @@
                 <i class="fa-solid fa-users"></i>
                 Donateurs
             </a>
+
         </aside>
