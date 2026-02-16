@@ -97,16 +97,16 @@ class BesoinController
                 continue;
             }
 
-            $idTypes = $stock->dons->types_besoin?->id;
+            $idDon = $stock->dons->id;
 
-            if (!$idTypes) {
+            if (!$idDon) {
                 continue;
             }
 
             $quantiteRestante = $stock->qte;
 
-            // Besoins non satisfaits du même type, triés par date la plus ancienne
-            $besoins = Besoin::getNonSatisfaitsByType($db, $idTypes);
+            // Besoins non satisfaits du même don, triés par date la plus ancienne
+            $besoins = Besoin::getNonSatisfaitsByType($db, $idDon);
 
             foreach ($besoins as $besoin) {
                 if ($quantiteRestante <= 0) {
