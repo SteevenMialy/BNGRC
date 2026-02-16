@@ -43,5 +43,9 @@ $router->group('', function (Router $router) use ($app) {
 		]);
 	});
 
+	$router->get('/achat', function () use ($app) {
+		$app->render('Achat');
+	});
+
 	
 }, [SecurityHeadersMiddleware::class]);

@@ -19,6 +19,17 @@ class Stock
         $this->daty = $daty;
     }
 
+
+    public static function Donsargent($db)
+    {
+        $sql = "SELECT sum(s.quantite) as total_argent FROM gd_dons d JOIN gd_stock s ON d.id_don=s.id_don WHERE d.idTypes=3 AND s.quantite>0 ORDER BY s.date_reception ASC";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $rows;
+    }
+
+
     public function insert($db): bool
     {
         $sql = "INSERT INTO gd_stock (idDon, qte, daty)
@@ -81,7 +92,8 @@ class Stock
         return $stmt->execute([':id' => $id]);
     }
 
-    public static function dons_ayant_stock ($db) {
+    public static function dons_ayant_stock($db)
+    {
         $sql = "SELECT * FROM gd_dons d JOIN gd_stock s ON d.id=s.idDon WHERE s.qte>0 ORDER BY s.daty ASC";
         $stmt = $db->prepare($sql);
         $stmt->execute();
@@ -99,5 +111,3 @@ class Stock
         return $stocks;
     }
 }
-
-
