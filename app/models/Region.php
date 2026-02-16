@@ -32,7 +32,7 @@ class Region
 
     public function insert($db): bool
     {
-        $sql = "INSERT INTO region (nom_region)
+        $sql = "INSERT INTO gd_regions (nom_region)
                 VALUES (:nom_region)";
         
         $stmt = $db->prepare($sql);
@@ -44,7 +44,7 @@ class Region
 
     public static function getAll($db): array
     {
-        $sql = "SELECT * FROM region ORDER BY id_region DESC";
+        $sql = "SELECT * FROM gd_regions ORDER BY id_region DESC";
         $stmt = $db->query($sql);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -52,7 +52,7 @@ class Region
 
     public static function getById($db, $id): ?Region
     {
-        $sql = "SELECT * FROM region WHERE id_region = :id";
+        $sql = "SELECT * FROM gd_regions WHERE id_region = :id";
         $stmt = $db->prepare($sql);
         $stmt->execute([':id' => $id]);
 
@@ -70,7 +70,7 @@ class Region
 
     public function update($db): bool
     {
-        $sql = "UPDATE region 
+        $sql = "UPDATE gd_regions 
                 SET nom_region = :nom_region
                 WHERE id_region = :id_region";
 
@@ -84,7 +84,7 @@ class Region
 
     public static function delete($db, $id): bool
     {
-        $sql = "DELETE FROM region WHERE id_region = :id";
+        $sql = "DELETE FROM gd_regions WHERE id_region = :id";
         $stmt = $db->prepare($sql);
 
         return $stmt->execute([':id' => $id]);
