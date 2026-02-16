@@ -34,7 +34,16 @@ class SimulationController
         return Simulation::getArgentReste($db, $idDon, $qte,$taux);
     }
 
-    
+    /**
+     * Vérifie si le don demandé est déjà en stock (qte > 0)
+     * Si oui, la simulation ne doit pas être validée (pas besoin d'acheter)
+     */
+    public static function donDejaEnStock($idDon): bool {
+        $db = Flight::db();
+        $result = Simulation::getqteDon($db, $idDon);
+        return isset($result['qte']) && (float)$result['qte'] > 0;
+    }
+
     
 
 
