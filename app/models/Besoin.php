@@ -35,11 +35,58 @@ class Besoin
         ]);
     }
 
+    public static function getNonSatisfaits($db): array
+    {
+        $sql = "SELECT * FROM gd_besoins_ville WHERE quantite_demandee > 0 ORDER BY date_demande ASC";
+        $stmt = $db->query($sql);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $besoins = [];
+        foreach ($rows as $row) {
+            $besoins[] = new Besoin(
+                $row['id_besoin'],
+                Ville::getById($db, $row['id_ville']),
+                TypeBesoin::getById($db, $row['id_types']),
+                $row['quantite_demandee'],
+                $row['date_demande']
+            );
+        }
+        return $besoins;
+    }
+
+    public static function getSatisfaits($db): array
+    {
+        $sql = "SELECT * FROM gd_besoins_ville WHERE quantite_demandee <= 0 ORDER BY date_demande ASC";
+        $stmt = $db->query($sql);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $besoins = [];
+        foreach ($rows as $row) {
+            $besoins[] = new Besoin(
+                $row['id_besoin'],
+                Ville::getById($db, $row['id_ville']),
+                TypeBesoin::getById($db, $row['id_types']),
+                $row['quantite_demandee'],
+                $row['date_demande']
+            );
+        }
+        return $besoins;
+    }
+
     public static function getAll($db): array
     {
         $sql = "SELECT * FROM gd_besoins_ville ORDER BY date_demande DESC";
         $stmt = $db->query($sql);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $besoins = [];
+        foreach ($rows as $row) {
+            $besoins[] = new Besoin(
+                $row['id_besoin'],
+                Ville::getById($db, $row['id_ville']),
+                TypeBesoin::getById($db, $row['id_types']),
+                $row['quantite_demandee'],
+                $row['date_demande']
+            );
+        }
+        return $besoins;
     }
 
     public static function getById($db, $id): ?Besoin

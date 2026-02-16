@@ -44,7 +44,7 @@ if (empty($app) === true) {
 // You'll need to namespace your classes with "app\folder\" to include them properly
 $app->path(__DIR__ . $ds . '..' . $ds . '..');
 
-define('BASE_URL', '/L2/GitHub/Exchange');
+define('BASE_URL', '/projetS3/ExamFinalS3/BNGRC');
 
 // Core config variables
 $app->set('flight.base_url', BASE_URL);           // Base URL for your app. Change if app is in a subdirectory (e.g., '/myapp/')
@@ -68,8 +68,8 @@ return [
 	 **************************************/
 	'database' => [
 		// MySQL Example:
-		'host'     => 'localhost:3306',      // Database host (e.g., 'localhost', 'db.example.com')
-		'dbname'   => 'exchange',   // Database name (e.g., 'flightphp')
+		'host'     => 'localhost:3307',      // Database host (e.g., 'localhost', 'db.example.com')
+		'dbname'   => 'gestion_dons',   // Database name (e.g., 'flightphp')
 		'user'     => 'root',  // Database user (e.g., 'root')
 		'password' => '',  // Database password (never commit real passwords)
 
