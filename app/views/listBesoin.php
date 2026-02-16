@@ -12,7 +12,7 @@
 
     <ul>
         <li><a href="<?= BASE_URL ?>/liste/satisfait">Satisfaits</a></li>
-        <li><a href="<?= BASE_URL ?>/liste/non-satisfait">Non satisfaits</a></li>
+        <li><a href="<?= BASE_URL ?>/liste/nonsatisfait">Non satisfaits</a></li>
     </ul>
 <br>
     <button type="button" id="delivrer">Distribuer les dons</button>
