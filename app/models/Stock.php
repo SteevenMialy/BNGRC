@@ -80,4 +80,22 @@ class Stock
         $stmt = $db->prepare($sql);
         return $stmt->execute([':id' => $id]);
     }
+    
+    public function dons_ayant_stock ($db) {
+        $sql = "SELECT * FROM gd_dons d JOIN gd_stock s ON d.id_don=s.id_don WHERE s.quantite>0 ORDER BY s.date_reception ASC";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $stocks = [];
+        foreach ($rows as $row) {
+            $stocks[] = new Stock(
+                $row['id_stock'],
+                Dons::getById($db, $row['id_dons']), // On hydrate l'objet Dons
+                $row['quantite'],
+                $row['date_reception']
+            );
+        }
+        return $stocks;
+    }
 }
