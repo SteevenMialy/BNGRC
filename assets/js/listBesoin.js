@@ -6,7 +6,7 @@ delivrer.addEventListener("click", function() {
     })    .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Besoins marqués comme délivrés avec succès !');
+            alert(data.message);
             location.reload(); // Recharger la page pour mettre à jour la liste
         } else {
             alert('Erreur lors de la mise à jour des besoins.');

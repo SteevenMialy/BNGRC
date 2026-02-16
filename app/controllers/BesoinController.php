@@ -36,6 +36,7 @@ class BesoinController
         $dons = Stock::dons_ayant_stock($db);
 
         $satisfaction = [];
+        $count = 0;
 
         foreach ($dons as $stock) {
             if (!$stock->dons) {
@@ -63,11 +64,13 @@ class BesoinController
                     $quantiteLivree = $besoin->quantite_demandee;
                     $quantiteRestante -= $besoin->quantite_demandee;
                     $besoin->quantite_demandee = 0;
+                    $count ++;
                 } else {
                     // Satisfaction partielle du besoin
                     $quantiteLivree = $quantiteRestante;
                     $besoin->quantite_demandee -= $quantiteRestante;
                     $quantiteRestante = 0;
+                    $count ++;
                 }
 
                 // Mise à jour du besoin en base
@@ -87,7 +90,7 @@ class BesoinController
 
         Flight::json([
             'success' => true,
-            'message' => 'Dons livrés et besoins mis à jour'
+            'message' => 'Dons livrés et besoins mis à jour (' . $count . ' besoins satisfaits)'
         ]);
     }
 
