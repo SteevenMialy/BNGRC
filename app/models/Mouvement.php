@@ -25,6 +25,56 @@ class Mouvement
         $this->designation = $designation;
     }
 
+    public function livraison($db, $data)
+    {
+        $stock = [];
+        foreach ($data as $key => $value) {
+            $sql ="UPDATE gd_stock SET quantite = quantite - :sortie WHERE id_stock = :id_stock";
+            $stmt2 = $db->prepare($sql);
+            $stmt2->execute([
+                ':sortie' => $value['sortie'],
+                ':id_stock' => $value['id_stock']
+            ]);
+            $stock[] = $stmt2->rowCount();
+        }
+        if (count($data) > 0 && count($stock) > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function insertentre($db, $data): bool
+    {
+        $sql = "INSERT INTO gd_mvstock (id_besoin, id_stock, entree, sortie, date_attribution, designation)
+                VALUES (:id_besoin, :id_stock, :entree, :sortie, :date_attribution, :designation)";
+
+        $stmt = $db->prepare($sql);
+        return $stmt->execute([
+            ':id_besoin' => $data['id_besoin'],
+            ':id_stock' => $data['id_stock'],
+            ':entree' => $data['entree'],
+            ':sortie' => 0,
+            ':date_attribution' => $data['date_attribution'],
+            ':designation' => $data['designation']
+        ]);
+    }
+
+    public function insertsortie($db, $data): bool
+    {
+        $sql = "INSERT INTO gd_mvstock (id_besoin, id_stock, entree, sortie, date_attribution, designation)
+                VALUES (:id_besoin, :id_stock, :entree, :sortie, :date_attribution, :designation)";
+
+        $stmt = $db->prepare($sql);
+        return $stmt->execute([
+            ':id_besoin' => $data['id_besoin'],
+            ':id_stock' => $data['id_stock'],
+            ':entree' => 0,
+            ':sortie' => $data['sortie'],
+            ':date_attribution' => $data['date_attribution'],
+            ':designation' => $data['designation']
+        ]);
+    }
+
     public function insert($db): bool
     {
         $sql = "INSERT INTO gd_mvstock (id_besoin, id_stock, entree, sortie, date_attribution, designation)
@@ -41,38 +91,7 @@ class Mouvement
         ]);
     }
 
-     public function insertentre($db, $data): bool
-    {
-        $sql = "INSERT INTO gd_mvstock (id_besoin, id_stock, entree, sortie, date_attribution, designation)
-                VALUES (:id_besoin, :id_stock, :entree, :sortie, :date_attribution, :designation)";
-
-        $stmt = $db->prepare($sql);
-        return $stmt->execute([
-            ':id_besoin' => $data['id_besoin'],
-            ':id_stock' => $data['id_stock'],
-            ':entree' => $data['entree'],
-            ':sortie' => 0,
-            ':date_attribution' => $data['date_attribution'],
-            ':designation' => $data['designation']
-        ]);
-    }
-
-     public function insertsortie($db, $data): bool
-    {
-        $sql = "INSERT INTO gd_mvstock (id_besoin, id_stock, entree, sortie, date_attribution, designation)
-                VALUES (:id_besoin, :id_stock, :entree, :sortie, :date_attribution, :designation)";
-
-        $stmt = $db->prepare($sql);
-        return $stmt->execute([
-            ':id_besoin' => $data['id_besoin'],
-            ':id_stock' => $data['id_stock'],
-            ':entree' => 0,
-            ':sortie' => $data['sortie'],
-            ':date_attribution' => $data['date_attribution'],
-            ':designation' => $data['designation']
-        ]);
-    }
-
+   
     public static function getAll($db): array
     {
         $sql = "SELECT * FROM gd_mvstock ORDER BY date_attribution DESC";
