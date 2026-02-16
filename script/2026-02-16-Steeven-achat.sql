@@ -10,5 +10,3 @@ CREATE TABLE gd_achat (
     FOREIGN KEY (idTypes) REFERENCES gd_typesDons(id),
     FOREIGN KEY (idDons) REFERENCES gd_dons(id)
 );
-
-
