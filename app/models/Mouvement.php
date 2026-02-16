@@ -41,6 +41,38 @@ class Mouvement
         ]);
     }
 
+     public function insertentre($db, $data): bool
+    {
+        $sql = "INSERT INTO gd_mvstock (id_besoin, id_stock, entree, sortie, date_attribution, designation)
+                VALUES (:id_besoin, :id_stock, :entree, :sortie, :date_attribution, :designation)";
+
+        $stmt = $db->prepare($sql);
+        return $stmt->execute([
+            ':id_besoin' => $data['id_besoin'],
+            ':id_stock' => $data['id_stock'],
+            ':entree' => $data['entree'],
+            ':sortie' => 0,
+            ':date_attribution' => $data['date_attribution'],
+            ':designation' => $data['designation']
+        ]);
+    }
+
+     public function insertsortie($db, $data): bool
+    {
+        $sql = "INSERT INTO gd_mvstock (id_besoin, id_stock, entree, sortie, date_attribution, designation)
+                VALUES (:id_besoin, :id_stock, :entree, :sortie, :date_attribution, :designation)";
+
+        $stmt = $db->prepare($sql);
+        return $stmt->execute([
+            ':id_besoin' => $data['id_besoin'],
+            ':id_stock' => $data['id_stock'],
+            ':entree' => 0,
+            ':sortie' => $data['sortie'],
+            ':date_attribution' => $data['date_attribution'],
+            ':designation' => $data['designation']
+        ]);
+    }
+
     public static function getAll($db): array
     {
         $sql = "SELECT * FROM gd_mvstock ORDER BY date_attribution DESC";
