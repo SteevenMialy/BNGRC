@@ -74,6 +74,30 @@ class Besoin
         return $besoins;
     }
 
+    public static function countNonSatisfaits($db): int
+    {
+        $sql = "SELECT count(*) as count FROM gd_besoinVille WHERE qte > 0 ORDER BY daty ASC";
+        $stmt = $db->query($sql);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row['count'] ?? 0;
+    }
+
+    public static function countSatisfaits($db): int
+    {
+        $sql = "SELECT count(*) as count FROM gd_besoinVille WHERE qte <= 0 ORDER BY daty ASC";
+        $stmt = $db->query($sql);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row['count'] ?? 0;
+    }
+
+    public static function countAll($db): int
+    {
+        $sql = "SELECT count(*) as count FROM gd_besoinVille";
+        $stmt = $db->query($sql);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row['count'] ?? 0;
+    }
+
     public static function getSatisfaits($db): array
     {
         $sql = "SELECT * FROM gd_besoinVille WHERE qte <= 0 ORDER BY daty ASC";
