@@ -20,6 +20,7 @@
         <i class="fa-solid fa-paper-plane"></i>
         Distribuer les dons
       </button>
+  
     </div>
   </div>
 
@@ -51,16 +52,17 @@
     </div>
   </div>
 
+
   <!-- Table section -->
   <div class="table-section">
-      <div class="table-section__header">
-        <div>
-          <div class="table-section__title">Demandes enregistrées</div>
-          <div class="table-section__subtitle">5 besoins affichés · Mis à jour aujourd'hui</div>
-        </div>
-        <div class="filter-tabs">
-          <button class="filter-tab active">Tous</button>
-          <a href="<?= BASE_URL ?>/listBesoin/satisfaits" class="filter-tab">Satisfaits</a>
+    <div class="table-section__header">
+      <div>
+        <div class="table-section__title">Demandes enregistrées</div>
+        <div class="table-section__subtitle"><?= count($besoins) ?> besoins affichés · Mis à jour aujourd'hui</div>
+      </div>
+      <div class="filter-tabs">
+        <button class="filter-tab active">Tous</button>
+        <a href="<?= BASE_URL ?>/listBesoin/satisfaits" class="filter-tab">Satisfaits</a>
         <a href="<?= BASE_URL ?>/listBesoin/nonSatisfaits" class="filter-tab">Non satisfaits</a>
       </div>
     </div>
@@ -114,7 +116,9 @@
 <script src="<?= BASE_URL ?>/assets/js/jquery-3.7.1.min.js"></script>
 <!-- Bootstrap 5.3 JS -->
 <script src="<?= BASE_URL ?>/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script> const BASE_URL = "<?= BASE_URL ?>"; </script>
+<script>
+  const BASE_URL = "<?= BASE_URL ?>";
+</script>
 <script src="<?= BASE_URL ?>/assets/js/listBesoin.js"></script>
 
 </body>
