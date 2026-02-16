@@ -27,13 +27,13 @@ class Achat
 
     public function insert($db): bool
     {
-        $sql = "INSERT INTO gd_achat (idVille, idDons, taux, quantite, date_achat)
-                VALUES (:idVille, :idDons, :taux, :quantite, :date_achat)";
+        $sql = "INSERT INTO gd_achat (idVille, idDon, taux, quantite, date_achat)
+            VALUES (:idVille, :idDon, :taux, :quantite, :date_achat)";
 
         $stmt = $db->prepare($sql);
         return $stmt->execute([
             ':idVille' => $this->ville?->id,
-            ':idDons' => $this->dons?->id,
+            ':idDon' => $this->dons?->id,
             ':taux' => $this->taux,
             ':quantite' => $this->quantite,
             ':date_achat' => $this->date_achat
@@ -51,26 +51,26 @@ class Achat
                 return false;
             }
 
-            $sqlStock = "SELECT id_stock FROM gd_stock WHERE id_don = :id_don LIMIT 1";
+            $sqlStock = "SELECT id FROM gd_stock WHERE idDon = :idDon LIMIT 1";
             $stmtStock = $db->prepare($sqlStock);
-            $stmtStock->execute([':id_don' => $achat['idDons']]);
+            $stmtStock->execute([':idDon' => $achat['idDons']]);
             $stockRow = $stmtStock->fetch(PDO::FETCH_ASSOC);
 
             if ($stockRow) {
-                $sqlUpdate = "UPDATE gd_stock SET quantite = quantite + :quantite WHERE id_stock = :id_stock";
+                $sqlUpdate = "UPDATE gd_stock SET qte = qte + :quantite WHERE id = :id";
                 $stmtUpdate = $db->prepare($sqlUpdate);
                 $stmtUpdate->execute([
                     ':quantite' => $achat['quantite'],
-                    ':id_stock' => $stockRow['id_stock']
+                    ':id' => $stockRow['id']
                 ]);
             } else {
-                $sqlInsert = "INSERT INTO gd_stock (id_don, quantite, date_reception)
-                              VALUES (:id_don, :quantite, :date_reception)";
+                $sqlInsert = "INSERT INTO gd_stock (idDon, qte, daty)
+                              VALUES (:idDon, :quantite, :daty)";
                 $stmtInsert = $db->prepare($sqlInsert);
                 $stmtInsert->execute([
-                    ':id_don' => $achat['idDons'],
+                    ':idDon' => $achat['idDon'],
                     ':quantite' => $achat['quantite'],
-                    ':date_reception' => date('Y-m-d H:i:s')
+                    ':daty' => date('Y-m-d H:i:s')
                 ]);
             }
 
@@ -100,21 +100,21 @@ class Achat
                 return false;
             }
 
-            $sqlStock = "SELECT id_stock, quantite FROM gd_stock WHERE id_don = :id_don LIMIT 1";
+            $sqlStock = "SELECT id, qte FROM gd_stock WHERE idDon = :idDon LIMIT 1";
             $stmtStock = $db->prepare($sqlStock);
-            $stmtStock->execute([':id_don' => $achat['idDons']]);
+            $stmtStock->execute([':idDon' => $achat['idDons']]);
             $stock = $stmtStock->fetch(PDO::FETCH_ASSOC);
 
-            if (!$stock || (float)$stock['quantite'] < (float)$achat['quantite']) {
+            if (!$stock || (float)$stock['qte'] < (float)$achat['quantite']) {
                 $db->rollBack();
                 return false;
             }
 
-            $sqlSortieStock = "UPDATE gd_stock SET quantite = quantite - :quantite WHERE id_stock = :id_stock";
+            $sqlSortieStock = "UPDATE gd_stock SET qte = qte - :quantite WHERE id = :id";
             $stmtSortieStock = $db->prepare($sqlSortieStock);
             $stmtSortieStock->execute([
                 ':quantite' => $achat['quantite'],
-                ':id_stock' => $stock['id_stock']
+                ':id' => $stock['id']
             ]);
 
             $okBesoin = self::comblerBesoinsVille($db, $achat);
@@ -136,12 +136,12 @@ class Achat
     public function insertData($db, $data): bool
     {
         $sql = "INSERT INTO gd_achat (idVille, idDons, taux, quantite, date_achat)
-                VALUES (:idVille, :idDons, :taux, :quantite, :date_achat)";
+            VALUES (:idVille, :idDon, :taux, :quantite, :date_achat)";
 
         $stmt = $db->prepare($sql);
         $stmt->execute([
             ':idVille' => $data['idVille'],
-            ':idDons' => $data['idDons'],
+            ':idDon' => $data['idDons'],
             ':taux' => $data['taux'],
             ':quantite' => $data['quantite'],
             ':date_achat' => $data['date_achat'] ?? date('Y-m-d H:i:s')
@@ -151,92 +151,38 @@ class Achat
 
     private static function getAchatRow($db, $id_achat): ?array
     {
-        $sql = "SELECT * FROM gd_achat WHERE id = :id";
+        $sql = "SELECT a.* FROM gd_achat a WHERE a.id = :id";
         $stmt = $db->prepare($sql);
         $stmt->execute([':id' => $id_achat]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ?: null;
     }
 
-    private static function columnExists($db, $table, $column): bool
-    {
-        $sql = "SELECT COUNT(*) AS c
-                FROM INFORMATION_SCHEMA.COLUMNS
-                WHERE TABLE_SCHEMA = DATABASE()
-                  AND TABLE_NAME = :table
-                  AND COLUMN_NAME = :column";
-        $stmt = $db->prepare($sql);
-        $stmt->execute([
-            ':table' => $table,
-            ':column' => $column
-        ]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return isset($row['c']) && (int)$row['c'] > 0;
-    }
-
     private static function comblerBesoinsVille($db, array $achat): bool
     {
-        if (!self::columnExists($db, 'gd_besoins_ville', 'quantite_demandee')) {
-            return true;
-        }
-
-        $idCol = self::columnExists($db, 'gd_besoins_ville', 'id_besoin') ? 'id_besoin' : (self::columnExists($db, 'gd_besoins_ville', 'id') ? 'id' : null);
-        $villeCol = self::columnExists($db, 'gd_besoins_ville', 'id_ville') ? 'id_ville' : (self::columnExists($db, 'gd_besoins_ville', 'idVille') ? 'idVille' : null);
-        $dateCol = self::columnExists($db, 'gd_besoins_ville', 'date_demande') ? 'date_demande' : (self::columnExists($db, 'gd_besoins_ville', 'daty') ? 'daty' : null);
-
-        if (!$idCol || !$villeCol || !$dateCol) {
-            return false;
-        }
-
-        $typeColInBesoin = null;
-        $typeValue = null;
-
-        if (self::columnExists($db, 'gd_besoins_ville', 'id_types')) {
-            $typeColInBesoin = 'id_types';
-            $typeValue = self::getTypeFromDons($db, $achat['idDons']);
-            if ($typeValue === null) {
-                return false;
-            }
-        } elseif (self::columnExists($db, 'gd_besoins_ville', 'idDon')) {
-            $typeColInBesoin = 'idDon';
-            $typeValue = $achat['idDons'];
-        } else {
-            return false;
-        }
-
         $reste = (float)$achat['quantite'];
+        $besoins = Besoin::getNonSatisfaitsByType($db, (int)$achat['idDons']);
 
-        while ($reste > 0) {
-            $sqlBesoin = "SELECT {$idCol} AS besoin_id, quantite_demandee
-                         FROM gd_besoins_ville
-                         WHERE {$villeCol} = :idVille
-                           AND {$typeColInBesoin} = :typeValue
-                           AND quantite_demandee > 0
-                         ORDER BY {$dateCol} ASC
-                         LIMIT 1";
-
-            $stmtBesoin = $db->prepare($sqlBesoin);
-            $stmtBesoin->execute([
-                ':idVille' => $achat['idVille'],
-                ':typeValue' => $typeValue
-            ]);
-            $besoin = $stmtBesoin->fetch(PDO::FETCH_ASSOC);
-
-            if (!$besoin) {
+        foreach ($besoins as $besoin) {
+            if ($reste <= 0) {
                 break;
             }
 
-            $qteBesoin = (float)$besoin['quantite_demandee'];
-            $qteServie = min($qteBesoin, $reste);
+            if ((int)$besoin->ville?->id !== (int)$achat['idVille']) {
+                continue;
+            }
 
-            $sqlUpdateBesoin = "UPDATE gd_besoins_ville
-                                SET quantite_demandee = quantite_demandee - :qte
-                                WHERE {$idCol} = :id";
-            $stmtUpdateBesoin = $db->prepare($sqlUpdateBesoin);
-            $stmtUpdateBesoin->execute([
-                ':qte' => $qteServie,
-                ':id' => $besoin['besoin_id']
-            ]);
+            $qteBesoin = (float)$besoin->qte;
+            if ($qteBesoin <= 0) {
+                continue;
+            }
+
+            $qteServie = min($qteBesoin, $reste);
+            $besoin->qte = $qteBesoin - $qteServie;
+
+            if (!$besoin->update($db)) {
+                return false;
+            }
 
             $reste -= $qteServie;
         }
@@ -244,34 +190,50 @@ class Achat
         return true;
     }
 
-    private static function getTypeFromDons($db, $idDons): ?int
+    private static function getTypeFromDons($db, $idDon): ?int
     {
-        if (self::columnExists($db, 'gd_dons', 'id_types')) {
-            $sql = "SELECT id_types AS id_type FROM gd_dons WHERE id_don = :id LIMIT 1";
-        } elseif (self::columnExists($db, 'gd_dons', 'idTypes')) {
-            $sql = "SELECT idTypes AS id_type FROM gd_dons WHERE id = :id LIMIT 1";
-        } else {
-            return null;
-        }
-
+        $sql = "SELECT idTypes AS id_type FROM gd_dons WHERE id = :id LIMIT 1";
         $stmt = $db->prepare($sql);
-        $stmt->execute([':id' => $idDons]);
+        $stmt->execute([':id' => $idDon]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
         return $row ? (int)$row['id_type'] : null;
     }
 
 
     public static function getAll($db): array
     {
-        $sql = "SELECT * FROM gd_achat ORDER BY date_achat DESC";
+        $sql = "SELECT a.* FROM gd_achat a ORDER BY a.date_achat DESC";
+        $stmt = $db->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getAllByVille($db, $idVille): array
+    {
+        $sql = "SELECT a.*, v.nomVille, d.libelle
+                FROM gd_achat a
+                JOIN gd_villes v ON v.id = a.idVille
+                JOIN gd_dons d ON d.id = a.idDons
+                WHERE a.idVille = :idVille
+                ORDER BY a.date_achat DESC";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([':idVille' => $idVille]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getAllWithVille($db): array
+    {
+        $sql = "SELECT a.*, v.nomVille, d.libelle
+                FROM gd_achat a
+                JOIN gd_villes v ON v.id = a.idVille
+                JOIN gd_dons d ON d.id = a.idDons
+                ORDER BY a.date_achat DESC";
         $stmt = $db->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public static function getById($db, $id): ?Achat
     {
-        $sql = "SELECT * FROM gd_achat WHERE id = :id";
+        $sql = "SELECT a.* FROM gd_achat a WHERE a.id = :id";
         $stmt = $db->prepare($sql);
         $stmt->execute([':id' => $id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);

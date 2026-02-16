@@ -24,7 +24,7 @@ class Simulation
 
     //qte nle don hananana raha mbola > 0 le izy de tsy afaka mividy
     public static function getqteDon($db,$idDon) {
-        $sql = "SELECT qte FROM gd_stock WHERE idDon = ?";
+        $sql = "SELECT COALESCE(SUM(qte), 0) AS qte FROM gd_stock WHERE idDon = ?";
         $stmt = $db->prepare($sql);
         $stmt->execute([$idDon]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -32,7 +32,7 @@ class Simulation
 
     //prix unitaire dons choisi
     public static function prixunitaire ($db,$idDon) {
-        $sql = "SELECT pu FROM gd_dons WHERE idDon = ?";
+        $sql = "SELECT pu FROM gd_dons WHERE id = ?";
         $stmt = $db->prepare($sql);
         $stmt->execute([$idDon]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -58,7 +58,10 @@ class Simulation
 
     public static function Donsargent($db)
     {
-        $sql = "SELECT sum(s.quantite) as total_argent FROM gd_dons d JOIN gd_stock s ON d.id_don=s.id_don WHERE d.idTypes=3 AND s.quantite>0 ORDER BY s.date_reception ASC";
+        $sql = "SELECT COALESCE(SUM(s.qte), 0) as total_argent
+                FROM gd_dons d
+                JOIN gd_stock s ON d.id = s.idDon
+                WHERE d.idTypes = 3 AND s.qte > 0";
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
