@@ -56,6 +56,16 @@
 
             <span class="sidebar__section-label" style="margin-top:12px">Gestion</span>
 
+            <a href="<?= BASE_URL ?>/achat" class="sidebar__link">
+                <i class="fa-solid fa-cart-shopping"></i>
+                Achats
+            </a>
+
+            <a href="<?= BASE_URL ?>/achat" class="sidebar__link">
+                <i class="fa-solid fa-clipboard-list"></i>
+                Enregistrer un besoin
+            </a>
+
             <a href="#" class="sidebar__link">
                 <i class="fa-solid fa-globe"></i>
                 Régions

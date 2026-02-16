@@ -113,9 +113,9 @@
 <!-- jQuery -->
 <script src="<?= BASE_URL ?>/assets/js/jquery-3.7.1.min.js"></script>
 <!-- Bootstrap 5.3 JS -->
-<script src="<?= BASE_URL ?>/assets/js/bootstrap.bundle.min.js"></script>
+<script src="<?= BASE_URL ?>/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script> const BASE_URL = "<?= BASE_URL ?>"; </script>
-<script src="<?= BASE_URL ?>/js/listBesoin.js"></script>
+<script src="<?= BASE_URL ?>/assets/js/listBesoin.js"></script>
 
 </body>
 
