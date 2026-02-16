@@ -6,45 +6,45 @@ use PDO;
 
 class Region
 {
-    public $id_region;
-    public $nom_region;
+    public $id;
+    public $nom;
 
-    public function __construct($id_region = null, $nom_region = null)
+    public function __construct($id = null, $nom = null)
     {
-        $this->id_region = $id_region;
-        $this->nom_region = $nom_region;
+        $this->id = $id;
+        $this->nom = $nom;
     }
 
     public function getIdregion()
     {
-        return $this->id_region;
+        return $this->id;
     }
 
     public function getNomRegion()
     {
-        return $this->nom_region;
+        return $this->nom;
     }
 
-    public function setNomRegion($nom_region)
+    public function setNomRegion($nom)
     {
-        $this->nom_region = $nom_region;
+        $this->nom = $nom;
     }
 
     public function insert($db): bool
     {
-        $sql = "INSERT INTO gd_regions (nom_region)
-                VALUES (:nom_region)";
+        $sql = "INSERT INTO gd_regions (nom)
+                VALUES (:nom)";
         
         $stmt = $db->prepare($sql);
 
         return $stmt->execute([
-            ':nom_region' => $this->nom_region
+            ':nom' => $this->nom
         ]);
     }
 
     public static function getAll($db): array
     {
-        $sql = "SELECT * FROM gd_regions ORDER BY id_region DESC";
+        $sql = "SELECT * FROM gd_regions ORDER BY id DESC";
         $stmt = $db->query($sql);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -52,7 +52,7 @@ class Region
 
     public static function getById($db, $id): ?Region
     {
-        $sql = "SELECT * FROM gd_regions WHERE id_region = :id";
+        $sql = "SELECT * FROM gd_regions WHERE id = :id";
         $stmt = $db->prepare($sql);
         $stmt->execute([':id' => $id]);
 
@@ -60,8 +60,8 @@ class Region
 
         if ($row) {
             return new Region(
-                $row['id_region'],
-                $row['nom_region']
+                $row['id'],
+                $row['nom']
             );
         }
 
@@ -71,22 +71,25 @@ class Region
     public function update($db): bool
     {
         $sql = "UPDATE gd_regions 
-                SET nom_region = :nom_region
-                WHERE id_region = :id_region";
+                SET nom = :nom
+                WHERE id = :id";
 
         $stmt = $db->prepare($sql);
 
         return $stmt->execute([
-            ':nom_region' => $this->nom_region,
-            ':id_region' => $this->id_region
+            ':nom' => $this->nom,
+            ':id' => $this->id
         ]);
     }
 
     public static function delete($db, $id): bool
     {
-        $sql = "DELETE FROM gd_regions WHERE id_region = :id";
+        $sql = "DELETE FROM gd_regions WHERE id = :id";
+
         $stmt = $db->prepare($sql);
 
-        return $stmt->execute([':id' => $id]);
+        return $stmt->execute([
+            ':id' => $id
+        ]);
     }
 }

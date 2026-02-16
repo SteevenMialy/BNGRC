@@ -13,33 +13,36 @@
     <ul>
         <li><a href="<?= BASE_URL ?>/liste/satisfait">Satisfaits</a></li>
         <li><a href="<?= BASE_URL ?>/liste/nonsatisfait">Non satisfaits</a></li>
+        <li><a href="<?= BASE_URL ?>/achat">Achat</a></li>
     </ul>
-<br>
+    <br>
     <button type="button" id="delivrer">Distribuer les dons</button>
     <br><br>
     <table>
         <tr>
-           <th>#id</th> 
-           <th>Ville</th>
-           <th>Région</th>
-           <th>Type</th>
-           <th>Quantite demandée</th>
+            <th>#id</th>
+            <th>Ville</th>
+            <th>Région</th>
+            <th>Type</th>
+            <th>Quantite demandée</th>
             <th>Date de demande</th>
         </tr>
         <?php foreach ($besoins as $besoin): ?>
             <tr>
-                <td><?= $besoin->id_besoin ?></td>
-                <td><?= $besoin->ville->nom_ville ?></td>
-                <td><?= $besoin->ville->region->nom_region ?></td>
-                <td><?= $besoin->types_besoin->nom_types ?></td>
-                <td><?= $besoin->quantite_demandee ?></td>
-                <td><?= $besoin->date_demande ?></td>
+                <td><?= $besoin->id ?></td>
+                <td><?= $besoin->ville->nomVille ?></td>
+                <td><?= $besoin->ville->region->nom ?></td>
+                <td><?= $besoin->don->libelle ?></td>
+                <td><?= $besoin->qte ?></td>
+                <td><?= $besoin->daty ?></td>
             </tr>
         <?php endforeach; ?>
     </table>
 
-<script>const BASE_URL = "<?= BASE_URL ?>";</script>
-<script src="<?= BASE_URL ?>/assets/js/listBesoin.js"></script>
+    <script>
+        const BASE_URL = "<?= BASE_URL ?>";
+    </script>
+    <script src="<?= BASE_URL ?>/assets/js/listBesoin.js"></script>
 </body>
 
 </html>
