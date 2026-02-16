@@ -30,6 +30,23 @@ class BesoinController
         return $besoins;
     }
 
+    public static function allCounts()
+    {
+        $db = Flight::db();
+        return [
+            'total' => Besoin::countAll($db),
+            'satisfaits' => Besoin::countSatisfaits($db),
+            'non_satisfaits' => Besoin::countNonSatisfaits($db)
+        ];
+    }
+
+    public static function getAllBesoins()
+    {
+        $db = Flight::db();
+        $besoins = Besoin::getAll($db);
+        return $besoins;
+    }
+
     public static function livrerDons()
     {
         $db = Flight::db();
