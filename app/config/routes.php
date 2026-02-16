@@ -6,7 +6,9 @@ use app\controllers\VilleController;
 use app\controllers\DonsController;
 use app\controllers\SimulationController;
 use app\controllers\AchatController;
+use app\controllers\StockController;
 use app\middlewares\SecurityHeadersMiddleware;
+use app\models\Stock;
 use flight\Engine;
 use flight\net\Router;
 
@@ -59,6 +61,23 @@ $router->group('', function (Router $router) use ($app) {
 			'dons' => DonsController::alldons()
 		]);
 	});
+
+	$router->post('/stock/insert', function () use ($app) {
+		$Controller= new StockController($app);
+		$Controller->insert();
+		$app->render('listBesoin', [
+			'besoins' => BesoinController::getAllBesoins(),
+			'counts' => BesoinController::allCounts()
+		]);
+	});
+
+	$router->get('/stock/form', function () use ($app) {
+		$app->render('InsertionStock', [
+			'ville' => VilleController::allville(),
+			'dons' => DonsController::alldons()
+		]);
+	});
+
 
 	$router->get('/simulation/@idville/@iddon/@qte/@taux', function ($idville, $iddon, $qte, $taux) use ($app) {
 		$stockreste = SimulationController::stockreste($iddon, $qte);
