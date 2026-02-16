@@ -23,7 +23,7 @@ $router->group('', function (Router $router) use ($app) {
 	$router->get('/form/ajoutBesoin', function () use ($app) {
 		$app->render('insertBesoin', [
 			'villes' => VilleController::getAll(),
-			'dons' => DonController::getAll()
+			'dons' => DonsController::alldons()
 		]);
 	});
 
