@@ -27,7 +27,7 @@ class TypeBesoin
 
     public static function getAll($db): array
     {
-        $sql = "SELECT * FROM gd_typesDons ORDER BY id DESC";
+        $sql = "SELECT * FROM gd_typesDons ORDER BY id ASC";
         $stmt = $db->query($sql);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
