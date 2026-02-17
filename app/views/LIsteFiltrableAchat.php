@@ -175,6 +175,8 @@
     </div>
 </main>
 
+<script src="<?= BASE_URL ?>/assets/js/jquery-3.7.1.min.js"></script>
+<script src="<?= BASE_URL ?>/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script>
     document.getElementById('filterVilleForm').addEventListener('submit', function (e) {
         e.preventDefault();

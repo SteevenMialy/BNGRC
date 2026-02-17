@@ -56,19 +56,88 @@
 
             <span class="sidebar__section-label" style="margin-top:12px">Gestion</span>
 
-            <a href="<?= BASE_URL ?>/achat" class="sidebar__link">
-                <i class="fa-solid fa-cart-shopping"></i>
-                Achats
-            </a>
+            <div class="sidebar__item">
+                <a class="sidebar__link d-flex justify-content-between align-items-center"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseAchatMenu"
+                    role="button"
+                    aria-expanded="<?= (strpos($_SERVER['REQUEST_URI'], 'achat') !== false) ? 'true' : 'false' ?>"
+                    aria-controls="collapseAchatMenu"
+                    style="cursor: pointer;">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span>Achats</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down small"></i>
+                </a>
 
-            <a href="<?= BASE_URL ?>/stock/form" class="sidebar__link">
-                <i class="fa-solid fa-box-open"></i> Insertion Stock
-            </a>
+                <div class="collapse <?= (strpos($_SERVER['REQUEST_URI'], 'achat') !== false) ? 'show' : '' ?>" id="collapseAchatMenu">
+                    <div class="ps-4 mt-2">
+                        <a href="<?= BASE_URL ?>/achat" class="d-block py-2 text-decoration-none sidebar__link">
+                            <i class="fa-solid fa-circle-plus me-1"></i> Nouvel achat
+                        </a>
+                        <a href="<?= BASE_URL ?>/achat/liste" class="d-block py-2 text-decoration-none sidebar__link">
+                            <i class="fa-solid fa-list-ul me-1"></i> Liste des achats
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar__item">
+                <a class="sidebar__link d-flex justify-content-between align-items-center"
+                    data-bs-toggle="collapse"
+                    href="#submenuStock"
+                    role="button"
+                    aria-expanded="false"
+                    aria-controls="submenuStock">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-box-open"></i>
+                        <span>Stock</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down small"></i>
+                </a>
+
+                <div class="collapse <?= (strpos($_SERVER['REQUEST_URI'], 'stock') !== false) ? 'show' : '' ?>" id="submenuStock">
+                    <div class="ps-4 mt-2">
+                        <a href="<?= BASE_URL ?>/stock/form" class="d-block py-2 text-decoration-none sidebar__link">
+                            <i class="fa-solid fa-plus-circle me-1"></i> Insertion Stock
+                        </a>
+                        <!-- <a href="<?= BASE_URL ?>/stock/liste" class="d-block py-2 text-decoration-none sidebar__link">
+                            <i class="fa-solid fa-list-ul me-1"></i> État du Stock
+                        </a> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar__item">
+                <a class="sidebar__link d-flex justify-content-between align-items-center"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#submenuDons"
+                    role="button"
+                    aria-expanded="<?= (strpos($_SERVER['REQUEST_URI'], 'Dons') !== false) ? 'true' : 'false' ?>"
+                    aria-controls="submenuDons"
+                    style="cursor: pointer;">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-hand-holding-heart"></i>
+                        <span>Dons</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down small"></i>
+                </a>
+
+                <div class="collapse <?= (strpos($_SERVER['REQUEST_URI'], 'Dons') !== false) ? 'show' : '' ?>" id="submenuDons">
+                    <div class="ps-4 mt-2">
+                        <a href="<?= BASE_URL ?>/form/ajoutDons" class="d-block py-2 text-decoration-none sidebar__link">
+                            <i class="fa-solid fa-plus-circle me-1"></i> Nouvel ajout
+                        </a>
+                    </div>
+                </div>
+            </div>
 
             <a href="<?= BASE_URL ?>/form/ajoutBesoin" class="sidebar__link">
                 <i class="fa-solid fa-clipboard-list"></i>
                 Enregistrer un besoin
             </a>
+
 
             <a href="#" class="sidebar__link">
                 <i class="fa-solid fa-globe"></i>
