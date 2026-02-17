@@ -20,6 +20,11 @@
         <i class="fa-solid fa-paper-plane"></i>
         Distribuer les dons
       </button>
+
+      <button id="reinitialiser" class="btn-primary">
+        <i class="fa-solid fa-rotate-left"></i>
+        Reinitialiser les données
+      </button>
   
     </div>
   </div>
