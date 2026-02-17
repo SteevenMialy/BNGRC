@@ -16,16 +16,19 @@
         <i class="fa-solid fa-magnifying-glass"></i>
         Rechercher
       </button>
+      <select id="mode" name="mode" id="mode" class="select-mode">
+        <option value="1">Dispache</option>
+        <option value="2">Minauriter</option>
+        <option value="3">Proportion</option>
+      </select>
       <button id="delivrer" class="btn-primary">
         <i class="fa-solid fa-paper-plane"></i>
         Distribuer les dons
       </button>
-
       <button id="reinitialiser" class="btn-primary">
         <i class="fa-solid fa-rotate-left"></i>
         Reinitialiser les données
       </button>
-  
     </div>
   </div>
 

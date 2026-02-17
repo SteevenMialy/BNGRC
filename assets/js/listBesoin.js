@@ -1,8 +1,9 @@
 var delivrer = document.getElementById("delivrer");
 var reinitialiser = document.getElementById("reinitialiser");
+var modeSelect = document.getElementById("mode");
 
 delivrer.addEventListener("click", function() {
-    fetch(BASE_URL + '/besoin/delivrer', {
+    fetch(BASE_URL + '/besoin/delivrer/' + modeSelect.value, {
         method: 'GET'
     })    .then(response => response.json())
     .then(data => {

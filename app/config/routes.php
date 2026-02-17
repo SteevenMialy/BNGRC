@@ -50,7 +50,29 @@ $router->group('', function (Router $router) use ($app) {
 	});
 	
 	Flight::route('/besoin/delivrer', [BesoinController::class, 'livrerDons']);
+	
+	$router->get('/besoin/delivrer/@mode', function ($mode) {
+		if ($mode == '1') {
+			BesoinController::livrerDons();
+			return;
+		}
 
+		if ($mode == '2') {
+			BesoinController::livrerDonsmin();
+			return;
+		}
+
+		if ($mode == '3') {
+			BesoinController::livrerDonsproportion();
+			return;
+		}
+
+		Flight::json([
+			'success' => false,
+			'message' => 'Mode de livraison invalide'
+		], 400);
+	});
+	
 	$router->get('/', function () use ($app) {
 		$app->render('listBesoin', [
 			'besoins' => BesoinController::getAllBesoins(),
