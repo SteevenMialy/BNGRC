@@ -113,7 +113,8 @@ class BesoinController
         } catch (\Exception $e) {
             try {
                 $db->exec('SET FOREIGN_KEY_CHECKS = 1');
-            } catch (\Exception $ignored) {}
+            } catch (\Exception $ignored) {
+            }
 
             Flight::json([
                 'success' => false,
@@ -296,6 +297,9 @@ class BesoinController
                 if ($besoin->qte > 0) {
                     $partTheorique = ($besoin->qte / $sommebesoin) * $stockInitial;
                     $quantiteLivree = (int) floor($partTheorique);
+                    $partidec = $partTheorique - $quantiteLivree;
+                    $arondi = $partidec >= 0.5 ? 1 : 0;
+                    $quantiteLivree += $arondi;
                     $quantiteLivree = min($quantiteLivree, (int)$besoin->qte, $quantiteRestante);
                     if ($quantiteLivree <= 0) {
                         continue;
