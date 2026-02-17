@@ -36,6 +36,96 @@ class Dons
         ]);
     }
 
+    public function insertWithId($db): bool
+    {
+        $sql = "";
+        $params = [];
+        if ($this->daty != null) {
+            $sql = "INSERT INTO gd_dons (id, libelle, pu, idTypes, daty)
+                VALUES (:id, :libelle, :pu, :idTypes, :daty)";
+            $params = [
+                ':id' => $this->id,
+                ':libelle' => $this->libelle,
+                ':pu' => $this->pu,
+                ':idTypes' => $this->types_besoin?->id,
+                ':daty' => $this->daty
+            ];
+        } else {
+            $sql = "INSERT INTO gd_dons (id, libelle, pu, idTypes)
+                VALUES (:id, :libelle, :pu, :idTypes)";
+            $params = [
+                ':id' => $this->id,
+                ':libelle' => $this->libelle,
+                ':pu' => $this->pu,
+                ':idTypes' => $this->types_besoin?->id
+            ];
+        }
+
+        $stmt = $db->prepare($sql);
+        return $stmt->execute($params);
+    }
+
+    public static function cleanTalble($db): bool
+    {
+        $sql = "TRUNCATE TABLE gd_dons";
+        $stmt = $db->prepare($sql);
+        return $stmt->execute();
+    }
+
+    public static function insertDataFile($db, string $path): bool
+    {
+        if (!file_exists($path)) {
+            return false;
+        }
+
+        $handle = fopen($path, 'r');
+        if (!$handle) {
+            return false;
+        }
+
+        $db->beginTransaction();
+
+        try {
+            $lineNumber = 1;
+
+            while (($line = fgetcsv($handle, 0, ',')) !== false) {
+                // CSV attendu : libelle, pu, idTypes
+                if (count($line) < 3) {
+                    continue;
+                }
+
+                $libelle = trim($line[0]);
+                $pu      = (float)$line[1];
+                $idTypes = (int)$line[2];
+
+                $daty = null;
+                if (isset($line[3]) && trim($line[3]) !== '') {
+                    $daty = trim($line[3]);
+                }
+
+                $don = new Dons(
+                    $lineNumber,
+                    $libelle,
+                    $pu,
+                    TypeBesoin::getById($db, $idTypes),
+                    $daty
+                );
+
+                $don->insertWithId($db);
+
+                $lineNumber++;
+            }
+
+            fclose($handle);
+            $db->commit();
+            return true;
+        } catch (\Exception $e) {
+            $db->rollBack();
+            fclose($handle);
+            return false;
+        }
+    }
+
     public static function getAll($db): array
     {
         $sql = "SELECT * FROM gd_dons ORDER BY daty ASC";
@@ -77,7 +167,7 @@ class Dons
                 TypeBesoin::getById($db, $row['idTypes']),
                 $row['daty']
             );
-        }   
+        }
 
         return null;
     }
@@ -109,7 +199,4 @@ class Dons
 
         return $stmt->execute([':id' => $id]);
     }
-
-
-
 }

@@ -34,6 +34,8 @@ $router->group('', function (Router $router) use ($app) {
 	Flight::route('/besoin/insert', [BesoinController::class, 'ajouterBesoin']);
 	Flight::route('/don/checkInsert', [DonsController::class, 'checkInsertDon']);
 
+	Flight::route('/data/reinitialize', [BesoinController::class, 'reinitializeData']);
+
 	$router->get('/listBesoin/satisfaits', function () use ($app) {
 		$app->render('listBesoin', [
 			'besoins' => BesoinController::getBesoinsSatisfaits(),

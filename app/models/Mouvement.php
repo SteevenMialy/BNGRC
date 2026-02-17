@@ -29,7 +29,7 @@ class Mouvement
     {
         $stock = [];
         foreach ($data as $key => $value) {
-            $sql ="UPDATE gd_stock SET qte = qte - :sortie WHERE id = :id";
+            $sql = "UPDATE gd_stock SET qte = qte - :sortie WHERE id = :id";
             $stmt2 = $db->prepare($sql);
             $stmt2->execute([
                 ':sortie' => $value['sortie'],
@@ -58,6 +58,14 @@ class Mouvement
             ':designation' => $data['designation']
         ]);
     }
+
+    public static function cleanTable($db): bool
+    {
+        $sql = "TRUNCATE TABLE gd_mvstock";
+        $stmt = $db->prepare($sql);
+        return $stmt->execute();
+    }
+
 
     public function insertsortie($db, $data): bool
     {
@@ -91,7 +99,7 @@ class Mouvement
         ]);
     }
 
-   
+
     public static function getAll($db): array
     {
         $sql = "SELECT * FROM gd_mvstock ORDER BY daty DESC";

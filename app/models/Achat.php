@@ -23,6 +23,12 @@ class Achat
         $this->date_achat = $date_achat;
     }
 
+    public static function cleanTable($db): bool
+    {
+        $sql = "TRUNCATE TABLE gd_achat";
+        $stmt = $db->prepare($sql);
+        return $stmt->execute();
+    }
 
 
     public function insert($db): bool

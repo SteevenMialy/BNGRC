@@ -2,10 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\Achat;
 use app\models\Besoin;
 use app\models\Stock;
 use app\models\Ville;
 use app\models\Dons;
+use app\models\Mouvement;
 use Flight;
 use flight\Engine;
 
@@ -82,6 +84,43 @@ class BesoinController
         $db = Flight::db();
         $besoins = Besoin::getAll($db);
         return $besoins;
+    }
+
+    public static function reinitializeData()
+    {
+        try {
+            $db = Flight::db();
+            $path = __DIR__ . '/../../original-data/';
+
+            $db->exec('SET FOREIGN_KEY_CHECKS = 0');
+
+            Mouvement::cleanTable($db);
+            Achat::cleanTable($db);
+            Besoin::cleanTable($db);
+            Stock::cleanTable($db);
+            Dons::cleanTalble($db);
+
+            $db->exec('SET FOREIGN_KEY_CHECKS = 1');
+
+            Dons::insertDataFile($db, $path . 'don.csv');
+            Stock::insertDataFile($db, $path . 'stock.csv');
+            Besoin::insertDataFile($db, $path . 'besoin.csv');
+
+            Flight::json([
+                'success' => true,
+                'message' => 'Données réinitialisées avec succès'
+            ]);
+        } catch (\Exception $e) {
+            try {
+                $db->exec('SET FOREIGN_KEY_CHECKS = 1');
+            } catch (\Exception $ignored) {}
+
+            Flight::json([
+                'success' => false,
+                'error' => 'Erreur lors de la réinitialisation des données: ' . $e->getMessage()
+            ]);
+            return;
+        }
     }
 
     public static function livrerDons()
