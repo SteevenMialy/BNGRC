@@ -58,7 +58,7 @@ $router->group('', function (Router $router) use ($app) {
 	$router->get('/achat', function () use ($app) {
 		$app->render('Achat', [
 			'ville' => VilleController::allville(),
-			'dons' => DonsController::alldons()
+			'dons' => DonsController::alldonssansargent()
 		]);
 	});
 
