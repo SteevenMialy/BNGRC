@@ -23,6 +23,10 @@ class DonsController
         return Dons::getAll(Flight::db());
     }  
 
+    public static function getalldons(){
+        return Dons::getAllDons(Flight::db());
+    }  
+
 
     public static function alldonssansargent () {
         return Dons::getAllSansArgent(Flight::db()); //tsy nalako
