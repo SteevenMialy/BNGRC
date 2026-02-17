@@ -42,7 +42,7 @@
         <i class="fa-solid fa-chart-line"></i>
       </div>
       <div class="stat-card__label">Total besoins</div>
-      <div class="stat-card__value"><?= $counts['total'] ?></div>
+      <div class="stat-card__value"><?= $counts['total'] ?> (<?= $Valeur["total"] ?> Ar )  </div>
       <div class="stat-card__sub">+3 cette semaine</div>
     </div>
     <div class="stat-card stat-card--sky">
@@ -50,7 +50,7 @@
         <i class="fa-solid fa-circle-check"></i>
       </div>
       <div class="stat-card__label">Satisfaits</div>
-      <div class="stat-card__value"><?= $counts['satisfaits'] ?></div>
+      <div class="stat-card__value"><?= $counts['satisfaits'] ?> (<?= $Valeur["satisfaits"] ?> Ar )</div>
       <div class="stat-card__sub"><?= $counts['total'] > 0 ? round(($counts['satisfaits'] / $counts['total']) * 100, 1) : 0 ?>% du total</div>
     </div>
     <div class="stat-card stat-card--amber">
@@ -58,7 +58,7 @@
         <i class="fa-solid fa-circle-exclamation"></i>
       </div>
       <div class="stat-card__label">En attente</div>
-      <div class="stat-card__value"><?= $counts['non_satisfaits'] ?></div>
+      <div class="stat-card__value"><?= $counts['non_satisfaits'] ?> (<?= $Valeur["non_satisfaits"] ?> Ar )</div>
       <div class="stat-card__sub">Nécessitent action</div>
     </div>
   </div>
