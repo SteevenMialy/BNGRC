@@ -192,7 +192,7 @@ class BesoinController
 
         Flight::json([
             'success' => true,
-            'message' => 'Dons livrés et besoins mis à jour (' . $count . ' besoins satisfaits)'
+            'message' => 'Dons livrés et besoins mis à jour'
         ]);
     }
 
@@ -269,7 +269,7 @@ class BesoinController
 
         Flight::json([
             'success' => true,
-            'message' => 'Dons livrés et besoins mis à jour (' . $count . ' besoins satisfaits)'
+            'message' => 'Dons livrés et besoins mis à jour'
         ]);
     }
 
@@ -353,7 +353,7 @@ class BesoinController
 
         Flight::json([
             'success' => true,
-            'message' => 'Dons livrés et besoins mis à jour (' . $count . ' besoins satisfaits)'
+            'message' => 'Dons livrés et besoins mis à jour'
         ]);
     }
 
