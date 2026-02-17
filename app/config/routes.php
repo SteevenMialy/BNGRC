@@ -8,7 +8,10 @@ use app\controllers\SimulationController;
 use app\controllers\AchatController;
 use app\controllers\StockController;
 use app\controllers\TypeController;
+use app\controllers\MouvementController;
+
 use app\middlewares\SecurityHeadersMiddleware;
+
 use app\models\Stock;
 use flight\Engine;
 use flight\net\Router;
@@ -37,20 +40,24 @@ $router->group('', function (Router $router) use ($app) {
 	Flight::route('/data/reinitialize', [BesoinController::class, 'reinitializeData']);
 
 	$router->get('/listBesoin/satisfaits', function () use ($app) {
+		$montantSatisfait = MouvementController::getmontantsatisfait();
 		$app->render('listBesoin', [
 			'besoins' => BesoinController::getBesoinsSatisfaits(),
-			'counts' => BesoinController::allCounts()
+			'counts' => BesoinController::allCounts(),
+			'Valeur' => BesoinController::valeurmotant($montantSatisfait)
 		]);
 	});
-	
+
+
+
 	$router->get('/form/ajoutDons', function () use ($app) {
 		$app->render('ajoutDons', [
 			'types' => TypeController::getAll()
 		]);
 	});
-	
+
 	Flight::route('/besoin/delivrer', [BesoinController::class, 'livrerDons']);
-	
+
 	$router->get('/besoin/delivrer/@mode', function ($mode) {
 		if ($mode == '1') {
 			BesoinController::livrerDons();
@@ -72,18 +79,22 @@ $router->group('', function (Router $router) use ($app) {
 			'message' => 'Mode de livraison invalide'
 		], 400);
 	});
-	
+
 	$router->get('/', function () use ($app) {
+		$montantSatisfait = MouvementController::getmontantsatisfait();
 		$app->render('listBesoin', [
 			'besoins' => BesoinController::getAllBesoins(),
-			'counts' => BesoinController::allCounts()
+			'counts' => BesoinController::allCounts(),
+			'Valeur' => BesoinController::valeurmotant($montantSatisfait)
 		]);
 	});
 
 	$router->get('/listBesoin/nonSatisfaits', function () use ($app) {
+		$montantSatisfait = MouvementController::getmontantsatisfait();
 		$app->render('listBesoin', [
 			'besoins' => BesoinController::getBesoinsNonSatisfaits(),
-			'counts' => BesoinController::allCounts()
+			'counts' => BesoinController::allCounts(),
+			'Valeur' => BesoinController::valeurmotant($montantSatisfait)
 		]);
 	});
 
@@ -95,11 +106,13 @@ $router->group('', function (Router $router) use ($app) {
 	});
 
 	$router->post('/stock/insert', function () use ($app) {
-		$Controller= new StockController($app);
+		$Controller = new StockController($app);
 		$Controller->insert();
+		$montantSatisfait = MouvementController::getmontantsatisfait();
 		$app->render('listBesoin', [
 			'besoins' => BesoinController::getAllBesoins(),
-			'counts' => BesoinController::allCounts()
+			'counts' => BesoinController::allCounts(),
+			'Valeur' => BesoinController::valeurmotant($montantSatisfait)
 		]);
 	});
 
@@ -162,8 +175,4 @@ $router->group('', function (Router $router) use ($app) {
 			'dons' => DonsController::getalldons()
 		]);
 	});
-
-
-
-	
 }, [SecurityHeadersMiddleware::class]);
