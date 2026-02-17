@@ -19,8 +19,13 @@ class DonsController
         $this->app = $app;
     }
 
-    public static function alldons () {
-        return Dons::getAllSansArgent(Flight::db());
+    public static function alldons(){
+        return Dons::getAll(Flight::db());
+    }  
+
+
+    public static function alldonssansargent () {
+        return Dons::getAllSansArgent(Flight::db()); //tsy nalako
     }
 
     public static function getDonById($id)
