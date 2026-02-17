@@ -40,7 +40,6 @@
             <a href="<?= BASE_URL ?>/" class="sidebar__link">
                 <i class="fa-solid fa-file-lines"></i>
                 Tous les besoins
-                <span class="sidebar__badge">24</span>
             </a>
 
             <a href="<?= BASE_URL ?>/listBesoin/satisfaits" class="sidebar__link">
@@ -51,7 +50,6 @@
             <a href="<?= BASE_URL ?>/listBesoin/nonSatisfaits" class="sidebar__link">
                 <i class="fa-solid fa-xmark"></i>
                 Non satisfaits
-                <span class="sidebar__badge" style="background:rgba(244,63,94,.12);color:#f43f5e;">7</span>
             </a>
 
             <span class="sidebar__section-label" style="margin-top:12px">Gestion</span>
