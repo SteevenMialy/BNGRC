@@ -151,6 +151,18 @@ $router->group('', function (Router $router) use ($app) {
 		AchatController::listeFiltrable($idville);
 	});
 
+	$router->get('/stock/list', function ($id = null) use ($app) {
+		$app->render('ListeStock', [
+			'stocks' => StockController::getallstock()
+		]);
+	});
+
+	$router->get('/dons/list', function ($id = null) use ($app) {
+		$app->render('ListeDon', [
+			'dons' => DonsController::getalldons()
+		]);
+	});
+
 
 
 	

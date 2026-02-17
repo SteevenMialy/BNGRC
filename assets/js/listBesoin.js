@@ -3,6 +3,11 @@ var reinitialiser = document.getElementById("reinitialiser");
 var modeSelect = document.getElementById("mode");
 
 delivrer.addEventListener("click", function() {
+    if(modeSelect.value === "") {
+        alert("Veuillez sélectionner un mode de distribution.");
+        return;
+    }
+    
     fetch(BASE_URL + '/besoin/delivrer/' + modeSelect.value, {
         method: 'GET'
     })    .then(response => response.json())

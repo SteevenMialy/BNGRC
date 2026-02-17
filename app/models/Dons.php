@@ -172,6 +172,30 @@ class Dons
         return null;
     }
 
+    public static function getAllDons($db): array
+    {
+        $sql = "SELECT * FROM gd_dons";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $dons = [];
+
+        foreach ($rows as $row) {
+            $dons[] = new Dons(
+                $row['id'],
+                $row['libelle'],
+                $row['pu'],
+                TypeBesoin::getById($db, $row['idTypes']),
+                $row['daty']
+            );
+        }
+
+        return $dons;
+    }
+
+
     public function update($db): bool
     {
         $sql = "UPDATE gd_dons 

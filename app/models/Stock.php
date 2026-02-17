@@ -139,6 +139,25 @@ class Stock
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function getAllstock($db): array
+    {
+        $sql = "SELECT * FROM gd_stock ";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $stocks = [];
+        foreach ($row as $rows) {
+            $stocks[] = new Stock(
+                $rows['id'],
+                Dons::getById($db, $rows['idDon']),
+                $rows['qte'],
+                $rows['daty']
+            );
+        }
+        return $stocks;
+    }
+
     public static function getById($db, $id): ?Stock
     {
         $sql = "SELECT * FROM gd_stock WHERE id = :id";

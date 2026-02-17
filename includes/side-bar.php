@@ -40,7 +40,6 @@
             <a href="<?= BASE_URL ?>/" class="sidebar__link">
                 <i class="fa-solid fa-file-lines"></i>
                 Tous les besoins
-                <span class="sidebar__badge">24</span>
             </a>
 
             <a href="<?= BASE_URL ?>/listBesoin/satisfaits" class="sidebar__link">
@@ -51,7 +50,6 @@
             <a href="<?= BASE_URL ?>/listBesoin/nonSatisfaits" class="sidebar__link">
                 <i class="fa-solid fa-xmark"></i>
                 Non satisfaits
-                <span class="sidebar__badge" style="background:rgba(244,63,94,.12);color:#f43f5e;">7</span>
             </a>
 
             <span class="sidebar__section-label" style="margin-top:12px">Gestion</span>
@@ -102,9 +100,9 @@
                         <a href="<?= BASE_URL ?>/stock/form" class="d-block py-2 text-decoration-none sidebar__link">
                             <i class="fa-solid fa-plus-circle me-1"></i> Insertion Stock
                         </a>
-                        <!-- <a href="<?= BASE_URL ?>/stock/liste" class="d-block py-2 text-decoration-none sidebar__link">
+                        <a href="<?= BASE_URL ?>/stock/list" class="d-block py-2 text-decoration-none sidebar__link">
                             <i class="fa-solid fa-list-ul me-1"></i> État du Stock
-                        </a> -->
+                        </a>
                     </div>
                 </div>
             </div>
@@ -128,6 +126,9 @@
                     <div class="ps-4 mt-2">
                         <a href="<?= BASE_URL ?>/form/ajoutDons" class="d-block py-2 text-decoration-none sidebar__link">
                             <i class="fa-solid fa-plus-circle me-1"></i> Nouvel ajout
+                        </a>
+                        <a href="<?= BASE_URL ?>/dons/list" class="d-block py-2 text-decoration-none sidebar__link">
+                            <i class="fa-solid fa-list-ul me-1"></i> liste des dons
                         </a>
                     </div>
                 </div>

@@ -39,6 +39,10 @@ class StockController
         return $stock->insert($db);
     }
 
+    public static function getallstock () {
+        return Stock::getAllstock(Flight::db());
+    }
+
 
 
 

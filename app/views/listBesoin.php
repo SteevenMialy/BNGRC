@@ -16,11 +16,14 @@
         <i class="fa-solid fa-magnifying-glass"></i>
         Rechercher
       </button>
-      <select id="mode" name="mode" id="mode" class="select-mode">
-        <option value="1">Dispache</option>
-        <option value="2">Minauriter</option>
-        <option value="3">Proportion</option>
-      </select>
+      <div class="ms-2" style="min-width: 200px;">
+        <select name="mode" id="mode" class="form-select custom-bootstrap-select">
+          <option value="">Mode de distribution</option>
+          <option value="1">Dispatch</option>
+          <option value="2">Minoritaire</option>
+          <option value="3">Proportionnel</option>
+        </select>
+      </div>
       <button id="delivrer" class="btn-primary">
         <i class="fa-solid fa-paper-plane"></i>
         Distribuer les dons
