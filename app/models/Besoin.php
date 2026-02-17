@@ -118,7 +118,7 @@ class Besoin
 
     public static function getAll($db): array
     {
-        $sql = "SELECT * FROM gd_besoinVille ORDER BY daty DESC";
+        $sql = "SELECT * FROM gd_besoinVille ORDER BY daty ASC";
         $stmt = $db->query($sql);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $besoins = [];
