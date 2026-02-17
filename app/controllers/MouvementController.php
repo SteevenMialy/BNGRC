@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Mouvement;
+
 use Flight;
 use flight\Engine;
 
@@ -35,6 +36,13 @@ class MouvementController
         $db = Flight::db();
         $objs = $obj->insertsortie($db, $data);
         return $objs;
+    }
+
+    public static function getmontantsatisfait(){
+        $obj = new Mouvement();
+        $db = Flight::db();
+        $montant = $obj->getmontantsatisfait($db);
+        return $montant;
     }
 
 
