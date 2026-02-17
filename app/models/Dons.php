@@ -52,6 +52,15 @@ class Dons
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function findByLibelle($db, $libelle): array
+    {
+        $sql = "SELECT * FROM gd_dons d WHERE d.libelle = :libelle ORDER BY daty ASC";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([':libelle' => $libelle]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public static function getById($db, $id): ?Dons
     {
         $sql = "SELECT * FROM gd_dons WHERE id = :id";

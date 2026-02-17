@@ -7,6 +7,7 @@ use app\controllers\DonsController;
 use app\controllers\SimulationController;
 use app\controllers\AchatController;
 use app\controllers\StockController;
+use app\controllers\TypeController;
 use app\middlewares\SecurityHeadersMiddleware;
 use app\models\Stock;
 use flight\Engine;
@@ -31,11 +32,18 @@ $router->group('', function (Router $router) use ($app) {
 	});
 
 	Flight::route('/besoin/insert', [BesoinController::class, 'ajouterBesoin']);
+	Flight::route('/don/checkInsert', [DonsController::class, 'checkInsertDon']);
 
 	$router->get('/listBesoin/satisfaits', function () use ($app) {
 		$app->render('listBesoin', [
 			'besoins' => BesoinController::getBesoinsSatisfaits(),
 			'counts' => BesoinController::allCounts()
+		]);
+	});
+	
+	$router->get('/form/ajoutDons', function () use ($app) {
+		$app->render('ajoutDons', [
+			'types' => TypeController::getAll()
 		]);
 	});
 	

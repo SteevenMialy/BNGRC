@@ -113,6 +113,8 @@
 
 </main>
 
+<script src="<?= BASE_URL ?>/assets/js/jquery-3.7.1.min.js"></script>
+<script src="<?= BASE_URL ?>/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script>
     document.getElementById("formSimulation").addEventListener("submit", function(e) {
         e.preventDefault(); // empêche l'envoi normal
