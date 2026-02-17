@@ -19,16 +19,26 @@ class DonsController
         $this->app = $app;
     }
 
-    public static function alldons(){
+    public static function alldons()
+    {
         return Dons::getAll(Flight::db());
-    }  
+    }
 
-    public static function getalldons(){
+    public static function reinitializedon()
+    {
+        $db = Flight::db();
+        Dons::cleanTalble($db);
+        $path = BASE_URL . '/original-data/don.csv';
+        Dons::insertDataFile($db, $path);
+    }
+
+    public static function getalldons()
+    {
         return Dons::getAllDons(Flight::db());
-    }  
+    }
 
-
-    public static function alldonssansargent () {
+    public static function alldonssansargent()
+    {
         return Dons::getAllSansArgent(Flight::db()); //tsy nalako
     }
 

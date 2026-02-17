@@ -46,7 +46,7 @@ class Besoin
     {
         $sql = "INSERT INTO gd_besoinVille (idVille, idDon, qte, daty)
                 VALUES (:idVille, :idDon, :qte, :daty)";
-        
+
         $stmt = $db->prepare($sql);
         return $stmt->execute([
             ':idVille'  => $this->ville?->id,
@@ -134,6 +134,43 @@ class Besoin
         return $besoins;
     }
 
+    public static function getBesoinByproportion($db,$idDon){
+        $sql = "SELECT * FROM gd_besoinVille WHERE idDon = :idDon";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([':idDon' => $idDon]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $besoins = [];
+        foreach ($rows as $row) {
+            $besoins[] = new Besoin(
+                $row['id'],
+                Ville::getById($db, $row['idVille']),
+                Dons::getById($db, $row['idDon']),
+                $row['qte'],
+                $row['daty']
+            );
+        }
+        return $besoins;
+    }
+
+    public static function getBesoinByTypesmin($db,$idDon){
+        $sql = "SELECT * FROM gd_besoinVille WHERE idDon = :idDon ORDER BY qte ASC";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([':idDon' => $idDon]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $besoins = [];
+        foreach ($rows as $row) {
+            $besoins[] = new Besoin(
+                $row['id'],
+                Ville::getById($db, $row['idVille']),
+                Dons::getById($db, $row['idDon']),
+                $row['qte'],
+                $row['daty']
+            );
+        }
+        return $besoins;
+    }
+
+
     public static function getById($db, $id): ?Besoin
     {
         $sql = "SELECT * FROM gd_besoinVille WHERE id = :id";
@@ -171,6 +208,103 @@ class Besoin
             ':id'       => $this->id
         ]);
     }
+
+    public function insertWithId($db): bool
+    {
+        if ($this->daty !== null) {
+            $sql = "INSERT INTO gd_besoinVille (id, idVille, idDon, qte, daty)
+                VALUES (:id, :idVille, :idDon, :qte, :daty)";
+            $params = [
+                ':id'      => $this->id,
+                ':idVille' => $this->ville?->id,
+                ':idDon'   => $this->don?->id,
+                ':qte'     => $this->qte,
+                ':daty'    => $this->daty
+            ];
+        } else {
+            $sql = "INSERT INTO gd_besoinVille (id, idVille, idDon, qte)
+                VALUES (:id, :idVille, :idDon, :qte)";
+            $params = [
+                ':id'      => $this->id,
+                ':idVille' => $this->ville?->id,
+                ':idDon'   => $this->don?->id,
+                ':qte'     => $this->qte
+            ];
+        }
+
+        $stmt = $db->prepare($sql);
+        return $stmt->execute($params);
+    }
+
+    public static function cleanTable($db): bool
+    {
+        $sql = "TRUNCATE TABLE gd_besoinVille";
+        $stmt = $db->prepare($sql);
+        return $stmt->execute();
+    }
+
+    public static function insertDataFile($db, string $path): bool
+    {
+        if (!file_exists($path)) {
+            return false;
+        }
+
+        $handle = fopen($path, 'r');
+        if (!$handle) {
+            return false;
+        }
+
+        $db->beginTransaction();
+
+        try {
+            $lineNumber = 1;
+
+            while (($line = fgetcsv($handle, 0, ',')) !== false) {
+
+                // CSV attendu : idVille, idDon, qte [, daty]
+                if (count($line) < 3) {
+                    continue;
+                }
+
+                $idVille = (int)$line[0];
+                $idDon   = (int)$line[1];
+                $qte     = (float)$line[2];
+
+                $daty = null;
+                if (isset($line[3]) && trim($line[3]) !== '') {
+                    $daty = trim($line[3]);
+                }
+
+                $ville = Ville::getById($db, $idVille);
+                $don   = Dons::getById($db, $idDon);
+
+                if ($ville === null || $don === null) {
+                    continue; // sécurité FK
+                }
+
+                $besoin = new Besoin(
+                    $lineNumber,
+                    $ville,
+                    $don,
+                    $qte,
+                    $daty
+                );
+
+                $besoin->insertWithId($db);
+
+                $lineNumber++;
+            }
+
+            fclose($handle);
+            $db->commit();
+            return true;
+        } catch (\Exception $e) {
+            $db->rollBack();
+            fclose($handle);
+            return false;
+        }
+    }
+
 
     public static function delete($db, $id): bool
     {
