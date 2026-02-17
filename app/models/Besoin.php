@@ -134,6 +134,43 @@ class Besoin
         return $besoins;
     }
 
+    public static function getBesoinByproportion($db,$idDon){
+        $sql = "SELECT * FROM gd_besoinVille WHERE idDon = :idDon";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([':idDon' => $idDon]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $besoins = [];
+        foreach ($rows as $row) {
+            $besoins[] = new Besoin(
+                $row['id'],
+                Ville::getById($db, $row['idVille']),
+                Dons::getById($db, $row['idDon']),
+                $row['qte'],
+                $row['daty']
+            );
+        }
+        return $besoins;
+    }
+
+    public static function getBesoinByTypesmin($db,$idDon){
+        $sql = "SELECT * FROM gd_besoinVille WHERE idDon = :idDon ORDER BY qte ASC";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([':idDon' => $idDon]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $besoins = [];
+        foreach ($rows as $row) {
+            $besoins[] = new Besoin(
+                $row['id'],
+                Ville::getById($db, $row['idVille']),
+                Dons::getById($db, $row['idDon']),
+                $row['qte'],
+                $row['daty']
+            );
+        }
+        return $besoins;
+    }
+
+
     public static function getById($db, $id): ?Besoin
     {
         $sql = "SELECT * FROM gd_besoinVille WHERE id = :id";
