@@ -74,6 +74,30 @@ class Besoin
         return $besoins;
     }
 
+    public static function valeurNonSatisfaits($db): float
+    {
+        $sql = "SELECT sum(pu*qte) as valeur FROM gd_besoinVille v JOIN gd_dons d ON v.idDon = d.id WHERE v.qte > 0 ORDER BY v.daty ASC";
+        $stmt = $db->query($sql);
+        $rows = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $rows['valeur'] ?? 0;
+    }
+
+    public static function valeurSatisfaits($db): float
+    {
+        $sql = "SELECT sum(pu*qte) as valeur FROM gd_besoinVille v JOIN gd_dons d ON v.idDon = d.id WHERE v.qte <= 0 ORDER BY v.daty ASC";
+        $stmt = $db->query($sql);
+        $rows = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $rows['valeur'] ?? 0;
+    }
+
+    public static function valeurtous($db): float
+    {
+        $sql = "SELECT sum(pu*qte) as valeur FROM gd_besoinVille v JOIN gd_dons d ON v.idDon = d.id  ORDER BY v.daty ASC";
+        $stmt = $db->query($sql);
+        $rows = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $rows['valeur'] ?? 0;
+    }
+
     public static function countNonSatisfaits($db): int
     {
         $sql = "SELECT count(*) as count FROM gd_besoinVille WHERE qte > 0 ORDER BY daty ASC";
@@ -134,7 +158,8 @@ class Besoin
         return $besoins;
     }
 
-    public static function getBesoinByproportion($db,$idDon){
+    public static function getBesoinByproportion($db, $idDon)
+    {
         $sql = "SELECT * FROM gd_besoinVille WHERE idDon = :idDon";
         $stmt = $db->prepare($sql);
         $stmt->execute([':idDon' => $idDon]);
@@ -152,7 +177,8 @@ class Besoin
         return $besoins;
     }
 
-    public static function getBesoinByTypesmin($db,$idDon){
+    public static function getBesoinByTypesmin($db, $idDon)
+    {
         $sql = "SELECT * FROM gd_besoinVille WHERE idDon = :idDon ORDER BY qte ASC";
         $stmt = $db->prepare($sql);
         $stmt->execute([':idDon' => $idDon]);

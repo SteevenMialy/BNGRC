@@ -43,6 +43,17 @@ class Mouvement
         return false;
     }
 
+    public function getmontantsatisfait($db){
+        $sql = "SELECT SUM(s.sortie * d.pu) as montant
+                FROM gd_mvstock s
+                JOIN gd_stock st ON s.idstock = st.id
+                JOIN gd_dons d ON st.idDon = d.id
+                WHERE s.sortie > 0";
+        $stmt = $db->query($sql);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['montant'] ?? 0;
+    }
+
     public function insertentre($db, $data): bool
     {
         $sql = "INSERT INTO gd_mvstock (idbesoin, idstock, entree, sortie, daty, designation)
@@ -98,6 +109,7 @@ class Mouvement
             ':designation' => $this->designation
         ]);
     }
+
 
 
     public static function getAll($db): array
