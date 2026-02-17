@@ -166,6 +166,14 @@ class BesoinController
                     $quantiteRestante = 0;
                     $count++;
                 }
+                
+                $mvt = new Mouvement();
+                $mvt->besoin = $besoin;
+                $mvt->stock = $stock;
+                $mvt->entree = 0;
+                $mvt->sortie = $quantiteLivree;
+                $mvt->designation = "Livraison de " . $quantiteLivree . " unités du don " . $stock->dons->libelle . " pour le besoin #" . $besoin->id;
+                $mvt->insert($db);
 
                 // Mise à jour du besoin en base
                 $besoin->update($db);
@@ -232,6 +240,15 @@ class BesoinController
                         $count++;
                     }
 
+                    $mvt = new Mouvement();
+                    $mvt->besoin = $besoin;
+                    $mvt->stock = $stock;
+                    $mvt->entree = 0;
+                    $mvt->sortie = $quantiteLivree;
+                    $mvt->designation = "Livraison de " . $quantiteLivree . " unités du don " . $stock->dons->libelle . " pour le besoin #" . $besoin->id;
+                    $mvt->insert($db);
+
+
                     // Mise à jour du besoin en base
                     $besoin->update($db);
 
@@ -242,6 +259,8 @@ class BesoinController
                     ];
                 }
             }
+
+
 
             // Mise à jour du stock restant
             $stock->qte = $quantiteRestante;
@@ -308,6 +327,14 @@ class BesoinController
                     $quantiteRestante -= $quantiteLivree;
                     $count++;
 
+                    $mvt = new Mouvement();
+                    $mvt->besoin = $besoin;
+                    $mvt->stock = $stock;
+                    $mvt->entree = 0;
+                    $mvt->sortie = $quantiteLivree;
+                    $mvt->designation = "Livraison de " . $quantiteLivree . " unités du don " . $stock->dons->libelle . " pour le besoin #" . $besoin->id;
+                    $mvt->insert($db);
+
                     // Mise à jour du besoin en base
                     $besoin->update($db);
 
@@ -328,5 +355,16 @@ class BesoinController
             'success' => true,
             'message' => 'Dons livrés et besoins mis à jour (' . $count . ' besoins satisfaits)'
         ]);
+    }
+
+    public static function valeurmotant($motantsatisafait)
+    {
+        $db = Flight::db();
+        $non_satisfaits = Besoin::valeurNonSatisfaits($db);
+        return [
+            'total' => $non_satisfaits + $motantsatisafait,
+            'satisfaits' => $motantsatisafait,
+            'non_satisfaits' => $non_satisfaits
+        ];
     }
 }
